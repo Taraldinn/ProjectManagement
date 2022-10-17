@@ -130,8 +130,17 @@ class LoginTemplateView(TemplateView):
                 user = authenticate(request, username=email, password=password) # authentication a user
                 # check user is not none == True or False
                 if user is not None:
-                    login(request, user) # going to login user
-                    return HttpResponse("regirect after login ")
+                    login(request, user) # now login user
+                    # given access by user type
+                    if request.user.user_type == 'admin':
+                        return HttpResponse("redirect ADMIN dashboard after login ")
+                    elif request.user.user_type == 'leader':
+                        return HttpResponse("redirect LEADER dashboard after login ")
+                    elif request.user.user_type == 'worker':
+                        return HttpResponse("redirect WORKER dashboard after login ")
+                    else:
+                        return HttpResponse("redirect 404 page  ")
+                    return HttpResponse("redirect after login ")
                 else:
                     # send a message to user
                     messages.info(request, "username or password is incorrect!")
