@@ -47,7 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('worker', 'worker')
     )
     email = models.EmailField(unique=True, blank=False, null=False)
-    user_type = models.CharField(max_length=100, choices=USER_TYPE, default=USER_TYPE[2])
+    user_type = models.CharField(max_length=100, choices=USER_TYPE, default='worker')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [] # we can pass extra fields on this list
     is_staff = models.BooleanField(default=False)
