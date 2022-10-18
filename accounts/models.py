@@ -77,16 +77,14 @@ class Profile(models.Model):
     surname = models.CharField(max_length=255, blank=False, null=False)
     fathers_name = models.CharField(max_length=255, blank=False, null=False)
     mothers_name = models.CharField(max_length=255, blank=False, null=False)
-    DateOfBirth = models.DateTimeField()
+    date_of_birth = models.DateTimeField()
     sex_name = models.CharField(max_length=55,choices=SEX_TYPE, blank=False, null=False)
     phone = models.CharField(max_length=14, blank=False, null=False)
     postel_code= models.CharField(max_length=14, blank=False, null=False)
     nid_card_no = models.CharField(max_length=14, blank=False, null=False)
-    bank_account_no = models.CharField(max_length=14, blank=False, null=False)
-    bank_account_name = models.CharField(max_length=255, blank=False, null=False)
     city = models.CharField(max_length=255, blank=False, null=False)
     address = models.CharField(max_length=300, blank=False, null=False)
-    Nationality = models.CharField(max_length=55, blank=False, null=False)
+    nationality = models.CharField(max_length=55, blank=False, null=False)
     marital_Status = models.BooleanField(default=False)
     employe_image = models.ImageField()
 
@@ -114,9 +112,11 @@ class Profile(models.Model):
         instance.profile.save()  # save profile object
 
 
-class BankInformation(models.Model):
-    # Add Bank BankInformation Here their
+# class BankInformation(models.Model):
+#     pass
+#     # Add Bank BankInformation Here their
 
 
-class EducationalCertificate(models.Model):
-    #  Add One or more then two education certificate here with description and file uploads
+# class EducationalCertificate(models.Model):
+#     pass
+#     #  Add One or more then two education certificate here with description and file uploads
