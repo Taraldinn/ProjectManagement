@@ -112,3 +112,11 @@ class Profile(models.Model):
     @receiver(post_save, sender=User)
     def save_profile(sender, instance, **kwargs):
         instance.profile.save()  # save profile object
+
+
+class BankInformation(models.Model):
+    # Add Bank BankInformation Here their
+
+
+class EducationalCertificate(models.Model):
+    #  Add One or more then two education certificate here with description and file uploads

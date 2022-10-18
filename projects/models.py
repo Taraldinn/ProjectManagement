@@ -1,15 +1,97 @@
 from django.db import models
 from django_quill.fields import QuillField
 
+
+
+
+PROJECT_STATUS_CHOICE = (
+            ("New", "New"),
+            ("Backlog", "Backlog"),
+            ("Blocked", "Blocked"),
+            ("In Progress", "In Progress"),
+            ("Test/Review", "Test/Review"),
+            ("Closed", "Closed"),
+)
+
+QUOTE_APPROVAL_STATUS = (
+            ("REJECTED", "REJECTED"),
+            ("DRAFT", "DRAFT"),
+            ("APPROVED", "APPROVED"),
+)
+
+RATING_SCORE = (
+            (1, "1 Star"),
+            (2, "2 Star"),
+            (3, "3 Star"),
+            (4, "4 Star"),
+            (5, "5 Star"),
+)
+
+RFC_APPROVAL = (
+            (1, "Waiting"),
+            (2, "Approved"),
+            (3, "Rejected"),
+            (4, "Cancel"),
+)
+
+RFC_IMPACT = (
+            (3, "High"),
+            (2, "Medium"),
+            (1, "Low"),
+)
+
+RFC_PRIORITY = (
+            (4, "Critical"),
+            (3, "High"),
+            (2, "Medium"),
+            (1, "Low"),
+)
+
+RFC_RISK = (
+            (5, "Very High"),
+            (4, "High"),
+            (3, "Moderate"),
+            (2, "Low"),
+            (1, "None"),
+)
+
+RFC_STATUS = (
+            (1, "Draft"),
+            (2, "Waiting for approval"),
+            (3, "Approved"),
+            (4, "Started"),
+            (5, "Finished"),
+            (6, "Rejected"),
+)
+
+RFC_TYPE = (
+            (4, "Emergency"),
+            (3, "High"),
+            (2, "Medium"),
+            (1, "Low"),
+)
+
+WANT_CHOICE = (
+    ("0", "Do not want to do"),
+            ("1", "Want to do"),
+)
+SKILL_CHOICE = (
+    ("0", "Can not do"),
+            ("1", "Willing to learn"),
+            ("2", "Knows a little"),
+            ("3", "Knows a lot"),
+            ("4", "Proficient"),
+)
+
 # Create your models here.
 status = (
-    ('1', 'Stuck'),
+            ('1', 'Stuck'),
             ('2', 'Working'),
             ('3', 'Done'),
 )
 
 due = (
-    ('1', 'On Due'),
+            ('1', 'On Due'),
             ('2', 'Overdue'),
             ('3', 'Done'),
 )
@@ -76,3 +158,12 @@ class WorkerProjectRecord(models.Model):
     #ToDo: Total Entry by User per week , month, year
     #ToDo: Total Project
     #ToDo: Total Project Done
+
+
+
+"""
+Hey,
+Arif Bhy In above I have added many choices that can assain as project pirity , risk and many more you can add this If you thinik this is good !
+
+
+"""
