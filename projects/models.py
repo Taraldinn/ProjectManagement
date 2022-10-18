@@ -58,6 +58,7 @@ class Task(models.Model):
 
 
 class TaskSubmission(models.Model):
+    # Only Assain on task user can submitted their task in tasksubmission
     # task_name =
     TodayWorkStarttime = models.DateTimeField()
     TodayWorkEndTime = models.DateTimeField()
@@ -65,6 +66,7 @@ class TaskSubmission(models.Model):
     TotalDataEntryToday = models.CharField()
     DataEntryPerHour = TotalDataEntryToday / TotalWorkingTimeToday
     ProjectFile = models.FileField(upload_to=None, max_length=254, **options)
+    ProjectSubmissionDescription = QuillField()
 
 
 
