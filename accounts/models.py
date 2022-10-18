@@ -87,7 +87,7 @@ class Profile(models.Model):
     city = models.CharField(max_length=255, blank=False, null=False)
     address = models.CharField(max_length=300, blank=False, null=False)
     Nationality = models.CharField(max_length=55, blank=False, null=False)
-    marital_Status = models.BooleanField(default=)
+    marital_Status = models.BooleanField(default=False)
     employe_image = models.ImageField()
 
     created = models.DateTimeField(auto_now_add=True)
