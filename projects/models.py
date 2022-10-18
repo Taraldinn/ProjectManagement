@@ -26,6 +26,8 @@ class Project(models.Model):
     complete_per = models.FloatField(max_length=2, validators = [MinValueValidator(0), MaxValueValidator(100)])
     description = QuillField()
     deadline = models.DateField()
+    ProjectClientBudget = models.CharField()
+    projectEastemateCost  = models.CharField() 
 
     add_date = models.DateField(auto_now_add=True)
     upd_date = models.DateField(auto_now_add=False, auto_now=True)
@@ -64,3 +66,11 @@ class TaskSubmission(models.Model):
     DataEntryPerHour = TotalDataEntryToday / TotalWorkingTimeToday
     ProjectFile = models.FileField(upload_to=None, max_length=254, **options)
 
+
+
+class WorkerProjectRecord(models.Model):
+    #ToDo: Total Project Done by user
+    #ToDo: Total Project Record by user
+    #ToDo: Total Entry by User per week , month, year
+    #ToDo: Total Project
+    #ToDo: Total Project Done
