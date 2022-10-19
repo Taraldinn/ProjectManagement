@@ -140,6 +140,7 @@ class Task(models.Model):
 
 
 class TaskSubmission(models.Model):
+    pass
     # Only Assain on task user can submitted their task in tasksubmission
     # task_name =
     TodayWorkStarttime = models.DateTimeField()
@@ -147,12 +148,13 @@ class TaskSubmission(models.Model):
     TotalWorkingTimeToday = TodayWorkEndTime - TodayWorkStarttime
     TotalDataEntryToday = models.CharField()
     DataEntryPerHour = TotalDataEntryToday / TotalWorkingTimeToday
-    ProjectFile = models.FileField(upload_to=None, max_length=254, **options)
+    ProjectFile = models.FileField(upload_to=None, max_length=254)
     ProjectSubmissionDescription = QuillField()
 
 
 
 class WorkerProjectRecord(models.Model):
+    pass
     #ToDo: Total Project Done by user
     #ToDo: Total Project Record by user
     #ToDo: Total Entry by User per week , month, year
@@ -161,9 +163,6 @@ class WorkerProjectRecord(models.Model):
 
 
 
-"""
-Hey,
-Arif Bhy In above I have added many choices that can assain as project pirity , risk and many more you can add this If you thinik this is good !
 
-
-"""
+# Hey,
+# Arif Bhy In above I have added many choices that can assain as project pirity , risk and many more you can add this If you thinik this is good !
