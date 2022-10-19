@@ -1,7 +1,11 @@
+from email.policy import default
+from webbrowser import get
 from django.db import models
 from django_quill.fields import QuillField
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth import get_user_model
 
-
+User = get_user_model()
 
 
 PROJECT_STATUS_CHOICE = (
@@ -83,34 +87,31 @@ SKILL_CHOICE = (
             ("4", "Proficient"),
 )
 
-# Create your models here.
-status = (
+STATUS = (
             ('1', 'Stuck'),
             ('2', 'Working'),
             ('3', 'Done'),
 )
 
-due = (
+DUE = (
             ('1', 'On Due'),
             ('2', 'Overdue'),
             ('3', 'Done'),
 )
 
 
-# Create your models here.
 class Project(models.Model):
     name = models.CharField(max_length=255)
-    # Assain Worker And Leader To This Project
-    # project_lead = models.ForeignKey(User, on_delete=models.CASCADE)
-    # assign = models.ManyToManyField(User, related_name="project_assign")
-    # efforts = models.DurationField()
-    status = models.CharField(max_length=7, choices=status, default=1)
+    leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
+    worker = models.ManyToManyField(User, blank=False, null=False, related_name="projects")
+    status = models.CharField(max_length=7, choices=STATUS, default=1)
     complete_per = models.FloatField(max_length=2, validators = [MinValueValidator(0), MaxValueValidator(100)])
     description = QuillField()
     deadline = models.DateField()
-    ProjectClientBudget = models.CharField()
-    projectEastemateCost  = models.CharField() 
-
+    project_client_budget = models.FloatField(default=0)
+    project_eastemate_cost = models.FloatField(default=0)
+    work_start_date = models.DateField()
+    work_end_date = models.DateField()
     add_date = models.DateField(auto_now_add=True)
     upd_date = models.DateField(auto_now_add=False, auto_now=True)
 
@@ -122,35 +123,35 @@ class Project(models.Model):
 
 
 class Task(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="task_project_assign")
-    # Assain Only worker to the task . and worker should be only on for only one task
-    # assign = models.ManyToManyField(User, related_name="task_assign")
-    task_name = models.CharField(max_length=80)
-    project_file = models.FileField(upload_to=None, max_length=254, **options)
-    status = models.CharField(max_length=7, choices=status, default=1)
-    due = models.CharField(max_length=7, choices=due, default=1)
+    name = models.CharField(max_length=100)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tasks")
+    worker = models.ManyToManyField(User, blank=False, null=False, related_name="tasks")
+    status = models.CharField(max_length=7, choices=STATUS, default=1)
+    due = models.CharField(max_length=7, choices=DUE, default=1)
     description = QuillField()
     deadline = models.DateField()
+    file = models.FileField(upload_to='project_task')
 
     class Meta:
-        ordering = ['project', 'task_name']
+        ordering = ['project', 'name']
 
     def __str__(self):
         return(self.task_name)
 
 
 class TaskSubmission(models.Model):
-    pass
-    # Only Assain on task user can submitted their task in tasksubmission
-    # task_name =
-    TodayWorkStarttime = models.DateTimeField()
-    TodayWorkEndTime = models.DateTimeField()
-    TotalWorkingTimeToday = TodayWorkEndTime - TodayWorkStarttime
-    TotalDataEntryToday = models.CharField()
-    DataEntryPerHour = TotalDataEntryToday / TotalWorkingTimeToday
-    ProjectFile = models.FileField(upload_to=None, max_length=254)
-    ProjectSubmissionDescription = QuillField()
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name= 'task_submissions')
+    today_start_work = models.DateTimeField()
+    today_end_work = models.DateTimeField()
+    total_data_entry_today = models.CharField()
+    file = models.FileField(upload_to='project_task_submission', max_length=254)
+    description = QuillField()
 
+    def total_hours_today(self):
+        pass
+
+    def data_entry_per_hour(self):
+        pass
 
 
 class WorkerProjectRecord(models.Model):
