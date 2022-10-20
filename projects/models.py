@@ -1,5 +1,3 @@
-from email.policy import default
-from webbrowser import get
 from django.db import models
 from django_quill.fields import QuillField
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -121,6 +119,15 @@ class Project(models.Model):
     def __str__(self):
         return (self.name)
 
+    def total_project_done_by_user(self):
+        pass
+    
+    #ToDo: Total Project Done by user
+    #ToDo: Total Project Record by user
+    #ToDo: Total Entry by User per week , month, year
+    #ToDo: Total Project
+    #ToDo: Total Project Done
+
 
 class Task(models.Model):
     name = models.CharField(max_length=100)
@@ -152,17 +159,6 @@ class TaskSubmission(models.Model):
 
     def data_entry_per_hour(self):
         pass
-
-
-class WorkerProjectRecord(models.Model):
-    pass
-    #ToDo: Total Project Done by user
-    #ToDo: Total Project Record by user
-    #ToDo: Total Entry by User per week , month, year
-    #ToDo: Total Project
-    #ToDo: Total Project Done
-
-
 
 
 # Hey,
