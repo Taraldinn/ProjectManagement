@@ -5,6 +5,17 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+    
+#ToDo: Total Project Done by user
+#ToDo: Total Project Record by user
+#ToDo: Total Entry by User per week , month, year
+#ToDo: Total Project
+#ToDo: Total Project Done
+
+# a user can submit single time for a project -> task submission editable valided for the 24 hours
+
+
+
 
 PROJECT_STATUS_CHOICE = (
             ("New", "New"),
@@ -101,7 +112,7 @@ DUE = (
 class Project(models.Model):
     name = models.CharField(max_length=255)
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
-    worker = models.ManyToManyField(User, blank=False, null=False, related_name="projects")
+    worker = models.ManyToManyField(User)
     status = models.CharField(max_length=7, choices=STATUS, default=1)
     complete_per = models.FloatField(max_length=2, validators = [MinValueValidator(0), MaxValueValidator(100)])
     description = QuillField()
@@ -110,6 +121,7 @@ class Project(models.Model):
     project_eastemate_cost = models.FloatField(default=0)
     work_start_date = models.DateField()
     work_end_date = models.DateField()
+    file = models.FileField(upload_to='project_file')
     add_date = models.DateField(auto_now_add=True)
     upd_date = models.DateField(auto_now_add=False, auto_now=True)
 
@@ -121,18 +133,12 @@ class Project(models.Model):
 
     def total_project_done_by_user(self):
         pass
-    
-    #ToDo: Total Project Done by user
-    #ToDo: Total Project Record by user
-    #ToDo: Total Entry by User per week , month, year
-    #ToDo: Total Project
-    #ToDo: Total Project Done
 
 
 class Task(models.Model):
     name = models.CharField(max_length=100)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tasks")
-    worker = models.ManyToManyField(User, blank=False, null=False, related_name="tasks")
+    worker = models.ManyToManyField(User)
     status = models.CharField(max_length=7, choices=STATUS, default=1)
     due = models.CharField(max_length=7, choices=DUE, default=1)
     description = QuillField()
@@ -143,16 +149,19 @@ class Task(models.Model):
         ordering = ['project', 'name']
 
     def __str__(self):
-        return(self.task_name)
+        return(self.name)
 
 
 class TaskSubmission(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name= 'task_submissions')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name= 'task_submissions')
     today_start_work = models.DateTimeField()
     today_end_work = models.DateTimeField()
-    total_data_entry_today = models.CharField()
+    total_data_entry_today = models.CharField(max_length=254)
     file = models.FileField(upload_to='project_task_submission', max_length=254)
     description = QuillField()
+
+    def __str__(self):
+        return f"task submission of => {self.project.name}"
 
     def total_hours_today(self):
         pass

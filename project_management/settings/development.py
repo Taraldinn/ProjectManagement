@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # our apps
     'accounts',
-    # 'projects',
+    'projects',
     # 'leader',
     'django_quill',
     #rich text editor app
