@@ -18,7 +18,9 @@ INSTALLED_APPS = [
     # our apps
     'accounts',
     'projects',
-    # 'leader',
+    'leader',
+    'worker',
+    'admin_dashboard',
     'django_quill',
     #rich text editor app
 ]

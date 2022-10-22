@@ -1,19 +1,25 @@
 from django.shortcuts import redirect, render
-
 from django.views.generic import TemplateView
 
-class WorkerDashboardTemplateAPIView(TemplateView):
+
+class AdminDashboardTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.user.user_type == 'admin':
-                return redirect('admin_dashboard:admin_dashboard')
-            elif request.user.user_type == 'leader':
-                return redirect('leader:leader_dashboard')
-            elif request.user.user_type == 'worker':
                 context = {
 
                 }
-                return render('worker/index.html', context)
+                return render(request, 'index.html', context)
+
+            elif request.user.user_type == 'leader':
+                return redirect('leader:leader_dashboard')
+
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+                
+            else:
+                return redirect('accounts:login')
+
         else:
             return redirect('accounts:login')
 

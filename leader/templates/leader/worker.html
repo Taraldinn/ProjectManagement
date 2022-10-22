@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <!--  BEGIN MAIN CONTAINER  -->
+    <div class="main-container sidebar-closed sbar-open" id="container">
+
+        <div class="overlay"></div>
+        <div class="cs-overlay"></div>
+        <div class="search-overlay"></div>
+
+        {% include 'sidebar.html' %}
+
+        <!--  BEGIN CONTENT AREA  -->
+        <div id="content" class="main-content">
+            <div class="layout-px-spacing">
+                
+                <div class="page-header">
+                    <div class="page-title">
+                        <h3>Workers List</h3>
+                    </div>
+                </div>
+
+                <div class="row" id="cancel-row">
+                
+                    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+                        <div class="widget-content widget-content-area br-6">
+                            <table id="default-ordering" class="table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Position</th>
+                                        <th>Office</th>
+                                        <th>Age</th>
+                                        <th>Start date</th>
+                                        <th>Salary</th>
+                                        <th class="text-center dt-no-sorting">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    
+                                    <tr>
+                                        <td>Doris Wilder</td>
+                                        <td>Sales Assistant</td>
+                                        <td>Sidney</td>
+                                        <td>23</td>
+                                        <td>2010/09/20</td>
+                                        <td>$85,600</td>
+                                        <td class="text-center"><button class="btn btn-primary btn-sm">View</button> </td>
+                                    </tr>
+
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!--  END CONTENT AREA  -->
+    </div>
+    <!-- END MAIN CONTAINER -->
+{% endblock body %}
+    
+    

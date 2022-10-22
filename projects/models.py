@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django_quill.fields import QuillField
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -121,6 +122,7 @@ class Project(models.Model):
     project_eastemate_cost = models.FloatField(default=0)
     work_start_date = models.DateField()
     work_end_date = models.DateField()
+    is_active = models.BooleanField(default=False)
     file = models.FileField(upload_to='project_file')
     add_date = models.DateField(auto_now_add=True)
     upd_date = models.DateField(auto_now_add=False, auto_now=True)
@@ -143,6 +145,7 @@ class Task(models.Model):
     due = models.CharField(max_length=7, choices=DUE, default=1)
     description = QuillField()
     deadline = models.DateField()
+    is_active = models.BooleanField(default=False)
     file = models.FileField(upload_to='project_task')
 
     class Meta:
