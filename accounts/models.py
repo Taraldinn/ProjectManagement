@@ -77,7 +77,7 @@ class Profile(models.Model):
     surname = models.CharField(max_length=255, blank=False, null=False)
     fathers_name = models.CharField(max_length=255, blank=False, null=False)
     mothers_name = models.CharField(max_length=255, blank=False, null=False)
-    date_of_birth = models.DateTimeField()
+    date_of_birth = models.DateField(null=True, blank=True)
     sex_name = models.CharField(max_length=55,choices=SEX_TYPE, blank=False, null=False)
     phone = models.CharField(max_length=14, blank=False, null=False)
     postel_code= models.CharField(max_length=14, blank=False, null=False)
@@ -95,6 +95,7 @@ class Profile(models.Model):
 
     class Meta:
         verbose_name_plural = 'Users Profiles'  # verbose_name_plural will replace your models name
+    
 
     # signals functions
     """

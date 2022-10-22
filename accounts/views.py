@@ -17,7 +17,14 @@ class LeaderRegisterTemplateView(TemplateView):
         # check user authenticated
         if request.user.is_authenticated:
             # redirect to user dashboard
-            return HttpResponse("Redirect to user dashboard coz user authenticated")
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                return redirect('leader:leader_dashboard')
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+            else:
+                return redirect('accounts:login')
         else:
             form  = RegisterForm()
             # send context to template 
@@ -32,7 +39,14 @@ class LeaderRegisterTemplateView(TemplateView):
         # check if user is authenticate == True or False
         if request.user.is_authenticated:
             # if user is authenticated then user will be redirect to dashboard
-            return HttpResponse("Redirect to user dashboard")
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                return redirect('leader:leader_dashboard')
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+            else:
+                return redirect('accounts:login')
         else:
             # check again is it post method or not, (to more secure)
             if request.method == 'post' or request.method == 'POST':
@@ -64,7 +78,14 @@ class WorkerRegisterTemplateView(TemplateView):
         # check user authenticated
         if request.user.is_authenticated:
             # redirect to user dashboard
-            return HttpResponse("Redirect to user dashboard coz user authenticated")
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                return redirect('leader:leader_dashboard')
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+            else:
+                return redirect('accounts:login')
         else:
             form  = RegisterForm()
             # send context to template 
@@ -79,7 +100,14 @@ class WorkerRegisterTemplateView(TemplateView):
         # check if user is authenticate == True or False
         if request.user.is_authenticated:
             # if user is authenticated then user will be redirect to dashboard
-            return HttpResponse("Redirect to user dashboard")
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                return redirect('leader:leader_dashboard')
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+            else:
+                return redirect('accounts:login')
         else:
             # check again is it post method or not, (to more secure)
             if request.method == 'post' or request.method == 'POST':
@@ -110,6 +138,14 @@ class LoginTemplateView(TemplateView):
     def get(self, request, *args, **kwargs):
         # check user authentication
         if request.user.is_authenticated:
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                return redirect('leader:leader_dashboard')
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+            else:
+                return redirect('accounts:login')
             return HttpResponse('Redirect to dashboad coz user is authenticated')
         else:
             context = {
@@ -121,7 +157,14 @@ class LoginTemplateView(TemplateView):
         # check user authentication
         if request.user.is_authenticated:
             # redirect to user dashboard
-            return HttpResponse('Redirect to dashboad coz user is authenticated')
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                return redirect('leader:leader_dashboard')
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+            else:
+                return redirect('accounts:login')
         else:
             # check request method
             if request.method == 'post' or request.method == 'POST':
@@ -133,14 +176,13 @@ class LoginTemplateView(TemplateView):
                     login(request, user) # now login user
                     # given access by user type
                     if request.user.user_type == 'admin':
-                        return HttpResponse("redirect ADMIN dashboard after login ")
+                        return redirect('admin_dashboard:admin_dashboard')
                     elif request.user.user_type == 'leader':
-                        return HttpResponse("redirect LEADER dashboard after login ")
+                        return redirect('leader:leader_dashboard')
                     elif request.user.user_type == 'worker':
-                        return HttpResponse("redirect WORKER dashboard after login ")
+                        return redirect('worker:worker_dashboard')
                     else:
-                        return HttpResponse("redirect 404 page  ")
-                    return HttpResponse("redirect after login ")
+                        return redirect('accounts:login')
                 else:
                     # send a message to user
                     messages.info(request, "username or password is incorrect!")
