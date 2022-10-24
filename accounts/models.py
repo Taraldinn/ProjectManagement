@@ -113,11 +113,27 @@ class Profile(models.Model):
         instance.profile.save()  # save profile object
 
 
-# class BankInformation(models.Model):
-#     pass
-#     # Add Bank BankInformation Here their
+class Bank(models.Model):
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE,
+                                related_name='bank')  # relation between user and profile models
+    bank_name = models.CharField(max_length=255, blank=False, null=False)
+    bank_acc_num = models.CharField(max_length=255, blank=False, null=False)
+    acc_holder_name = models.CharField(max_length=255, blank=False, null=False)
+    acc_branch_name = models.CharField(max_length=255, blank=False, null=False)
+
+    def __str__(self):
+        return self.profile.user.email  # return a string that we can see on dashboard
+    
+    class Meta:
+        verbose_name_plural = 'Users Bank Info'  # verbose_name_plural will replace your models name
+
+    @receiver(post_save, sender=Profile)
+    def create_bank(sender, instance, created, **kwargs):
+        if created:
+            Bank.objects.create(profile=instance)  # creating profile object
+
+    @receiver(post_save, sender=Profile)
+    def save_bank(sender, instance, **kwargs):
+        instance.bank.save()  # save profile object
 
 
-# class EducationalCertificate(models.Model):
-#     pass
-#     #  Add One or more then two education certificate here with description and file uploads

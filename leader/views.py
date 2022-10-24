@@ -25,14 +25,14 @@ class LeaderDashboardAPIView(TemplateView):
                 submission_task_count = TaskSubmission.objects.all().count()
 
                 # object filter area
-                lates_active_project = Project.objects.filter(is_active=True).order_by('-id')
+                ongoing_projects = Project.objects.filter(is_active=True).order_by('-id')
 
                 context = {
                     'leader_count': leaders_count,
                     'projects_count': projects_count,
                     'tasks_count': tasks_count,
                     'submission_task_count': submission_task_count,
-                    'lates_active_project': lates_active_project
+                    'ongoing_projects': ongoing_projects
                 }
                 return render(request, 'leader/index.html', context)
             

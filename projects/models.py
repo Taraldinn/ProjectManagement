@@ -109,9 +109,17 @@ DUE = (
             ('3', 'Done'),
 )
 
+class Categories(models.Model):
+    name = models.CharField(max_length=255, blank=False, null=False)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return (self.name)
+
 
 class Project(models.Model):
     name = models.CharField(max_length=255)
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE, related_name='projects')
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
     worker = models.ManyToManyField(User)
     status = models.CharField(max_length=7, choices=STATUS, default=1)
