@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'worker',
     'admin_dashboard',
     'django_quill',
-    #rich text editor app
+    
 ]
 
 

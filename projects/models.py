@@ -98,15 +98,15 @@ SKILL_CHOICE = (
 )
 
 STATUS = (
-            ('1', 'Stuck'),
-            ('2', 'Working'),
-            ('3', 'Done'),
+            ('stuck', 'Stuck'),
+            ('working', 'Working'),
+            ('done', 'Done'),
 )
 
 DUE = (
-            ('1', 'On Due'),
-            ('2', 'Overdue'),
-            ('3', 'Done'),
+            ('on due', 'On Due'),
+            ('overdue', 'Overdue'),
+            ('done', 'Done'),
 )
 
 class Categories(models.Model):

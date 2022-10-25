@@ -125,7 +125,7 @@ class ProjectTemplateAPIView(TemplateView):
                 context = {
                     'projects': projects
                 }
-                return render(request, 'leader/project.html', context)
+                return render(request, 'leader/projects.html', context)
             elif request.user.user_type == 'worker':
                 return redirect('worker:worker_dashboard')
             else:

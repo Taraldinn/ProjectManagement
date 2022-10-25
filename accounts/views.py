@@ -92,10 +92,9 @@ class WorkerRegisterTemplateView(TemplateView):
             else:
                 return redirect('accounts:login')
         else:
-            form  = RegisterForm()
             # send context to template 
             context = {
-                'form': form
+
             }
             # render template
             return render(request, 'accounts/register.html', context) # render a template with context
@@ -116,7 +115,12 @@ class WorkerRegisterTemplateView(TemplateView):
         else:
             # check again is it post method or not, (to more secure)
             if request.method == 'post' or request.method == 'POST':
-                form = RegisterForm(request.POST) # pass user submited data to RegisterForm 
+                postData = {
+                    'email': request.POST.get('email'),
+                    'password1': request.POST.get('password1'),
+                    'password2': request.POST.get('password2')
+                }
+                form = RegisterForm(postData) # pass user submited data to RegisterForm 
                 if form.is_valid(): # check the submited data is valid
                     try: # inside try we gonna check user is exist == True or False
                         email = form.cleaned_data['email'] # get submited user email
