@@ -118,18 +118,19 @@ class Categories(models.Model):
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=255)
-    category = models.ForeignKey(Categories, on_delete=models.CASCADE, related_name='projects')
-    leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
-    worker = models.ManyToManyField(User)
-    status = models.CharField(max_length=7, choices=STATUS, default=1)
-    complete_per = models.FloatField(max_length=2, validators = [MinValueValidator(0), MaxValueValidator(100)])
-    description = QuillField()
-    deadline = models.DateField()
-    project_client_budget = models.FloatField(default=0)
-    project_eastemate_cost = models.FloatField(default=0)
-    work_start_date = models.DateField()
-    work_end_date = models.DateField()
+    name = models.CharField(max_length=255) # done
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE, related_name='projects')# done
+    leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')# done
+    worker = models.ManyToManyField(User)# done
+    status = models.CharField(max_length=7, choices=STATUS, default=1)# done
+    work_start_date = models.DateField()# done
+    work_end_date = models.DateField()# done
+    deadline = models.DateField()# done
+    project_client_budget = models.IntegerField(default=0)# done
+    project_eastemate_cost = models.IntegerField(default=0)# done
+    sort_description = models.CharField(max_length=300, blank=False, null=False)# done
+    description = QuillField()# done
+    complete_per = models.FloatField(max_length=2, blank=True, null=True, validators = [MinValueValidator(0), MaxValueValidator(100)])
     is_active = models.BooleanField(default=False)
     file = models.FileField(upload_to='project_file')
     add_date = models.DateField(auto_now_add=True)

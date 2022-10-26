@@ -33,7 +33,7 @@
                 </ul>
               </div>
               <div class="col-md-6 p-0">                    
-                <div class="form-group mb-0 me-0"></div><a class="btn btn-primary" href="projectcreate.html"> <i data-feather="plus-square"> </i>Create New Project</a>
+                <div class="form-group mb-0 me-0"></div><a class="btn btn-primary" href="{% url 'leader:leader_project_add' %}"> <i data-feather="plus-square"> </i>Create New Project</a>
               </div>
             </div>
           </div>
@@ -57,7 +57,7 @@
                                 <p>{{project.category}}</p>
                               </div>
                             </div>
-                            {{project.description.html|safe}}
+                            <p>{{project.sort_description}}</p>
                             <div class="row details">
                               <div class="col-6"><span>Issues </span></div>
                               <div class="col-6 font-primary">12 </div>
@@ -78,11 +78,11 @@
                             </div>
                             <div class="project-status mt-4">
                               <div class="media mb-0">
-                                <p>70% </p>
+                                <p>{{project.complete_per}}% </p>
                                 <div class="media-body text-end"><span>Done</span></div>
                               </div>
                               <div class="progress" style="height: 5px">
-                                <div class="progress-bar-animated bg-primary progress-bar-striped" role="progressbar" style="width: 70%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar-animated bg-primary progress-bar-striped" role="progressbar" style="width: {{project.complete_per}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                               </div>
                             </div>
                           </div>
@@ -99,14 +99,14 @@
                     {% for project in projects %}
                       {% if project.status == 'working' %}
                         <div class="col-xxl-4 box-col-6 col-lg-6">
-                          <div class="project-box"><span class="badge badge-primary">Doing</span>
-                            <h6>Endless admin Design</h6>
+                          <div class="project-box"><span class="badge badge-primary">{{project.status}}</span>
+                            <h6>{{project.name}}</h6>
                             <div class="media"><img class="img-20 me-2 rounded-circle" src="../assets/images/user/3.jpg" alt="" data-original-title="" title="">
                               <div class="media-body">
-                                <p>Themeforest, australia</p>
+                                <p>{{project.category}}</p>
                               </div>
                             </div>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                            <p>{{project.sort_description}}</p>
                             <div class="row details">
                               <div class="col-6"><span>Issues </span></div>
                               <div class="col-6 font-primary">12 </div>
@@ -127,11 +127,11 @@
                             </div>
                             <div class="project-status mt-4">
                               <div class="media mb-0">
-                                <p>70% </p>
+                                <p>{{project.complete_per}}% </p>
                                 <div class="media-body text-end"><span>Done</span></div>
                               </div>
                               <div class="progress" style="height: 5px">
-                                <div class="progress-bar-animated bg-primary progress-bar-striped" role="progressbar" style="width: 70%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar-animated bg-primary progress-bar-striped" role="progressbar" style="width: {{project.complete_per}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                               </div>
                             </div>
                           </div>
@@ -148,14 +148,14 @@
                     {% for project in projects %}
                       {% if project.status == 'done' %}
                         <div class="col-xxl-4 box-col-6 col-lg-6">
-                          <div class="project-box"><span class="badge badge-primary">Doing</span>
-                            <h6>Endless admin Design</h6>
+                          <div class="project-box"><span class="badge badge-primary">{{project.status}}</span>
+                            <h6>{{project.name}}</h6>
                             <div class="media"><img class="img-20 me-2 rounded-circle" src="../assets/images/user/3.jpg" alt="" data-original-title="" title="">
                               <div class="media-body">
-                                <p>Themeforest, australia</p>
+                                <p>{{project.category}}</p>
                               </div>
                             </div>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                            <p>{{project.sort_description}}</p>
                             <div class="row details">
                               <div class="col-6"><span>Issues </span></div>
                               <div class="col-6 font-primary">12 </div>
@@ -176,11 +176,11 @@
                             </div>
                             <div class="project-status mt-4">
                               <div class="media mb-0">
-                                <p>70% </p>
+                                <p>{{project.complete_per}}% </p>
                                 <div class="media-body text-end"><span>Done</span></div>
                               </div>
                               <div class="progress" style="height: 5px">
-                                <div class="progress-bar-animated bg-primary progress-bar-striped" role="progressbar" style="width: 70%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar-animated bg-primary progress-bar-striped" role="progressbar" style="width: {{project.complete_per}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                               </div>
                             </div>
                           </div>
