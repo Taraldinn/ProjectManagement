@@ -1,13 +1,19 @@
 from django import forms
 from projects.models import Categories, Project, Task, TaskSubmission
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class ProjectModelForm(forms.ModelForm):
+    worker = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(user_type='worker'),
+        widget=forms.CheckboxSelectMultiple
+    )
     class Meta:
         model = Project
         fields = [
             'name',
             'category',
-            'leader',
             'worker',
             'status',
             'work_start_date',
@@ -23,7 +29,6 @@ class ProjectModelForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Project name *'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
-            'worker': forms.SelectMultiple(attrs={'class': 'form-select'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'work_start_date': forms.DateInput(attrs={'class': 'form-select datepicker-here', 'data-language':'en'}),
             'work_end_date': forms.DateInput(attrs={'class': 'form-select datepicker-here', 'data-language':'en'}),

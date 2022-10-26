@@ -1,3 +1,4 @@
+from multiprocessing import current_process
 from webbrowser import get
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -165,15 +166,14 @@ class ProjectCreateTemplateAPIView(TemplateView):
             if request.method == 'post' or request.method == 'POST':
                 # here will execude tasks
                 form = ProjectModelForm(request.POST, request.FILES)
-                print('======================================')
-                print(form)
-                print('======================================')
                 if form.is_valid():
                     instance = form.save(commit=False)
                     instance.leader = request.user
                     instance.complete_per = 0
                     instance.is_active = True
                     instance.save()
+                    for worker in request.POST.getlist('worker'):
+                        instance.worker.add(worker)
                     return redirect('leader:leader_project')
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
