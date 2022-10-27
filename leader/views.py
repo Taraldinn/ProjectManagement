@@ -66,7 +66,7 @@ class WorkerListTemplateAPIView(TemplateView):
                 context = {
                     'workers': workers
                 }
-                return render(request, 'leader/worker.html', context)
+                return render(request, 'leader/workers.html', context)
             
             # worker access
             elif request.user.user_type == 'worker':
