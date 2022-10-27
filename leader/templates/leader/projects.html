@@ -68,11 +68,11 @@
                             </div>
                             <div class="customers">
                               <ul>
-                                <li class="d-inline-block"><img class="img-30 rounded-circle" src="../assets/images/user/3.jpg" alt="" data-original-title="" title=""></li>
-                                <li class="d-inline-block"><img class="img-30 rounded-circle" src="../assets/images/user/5.jpg" alt="" data-original-title="" title=""></li>
-                                <li class="d-inline-block"><img class="img-30 rounded-circle" src="../assets/images/user/1.jpg" alt="" data-original-title="" title=""></li>
+                                {% for worker in project.worker.all %}
+                                  <li class="d-inline-block"><img class="img-30 rounded-circle" src="{{worker.profile.employe_image.url}}" alt="" data-original-title="" title=""></li>
+                                {% endfor %}
                                 <li class="d-inline-block ms-2">
-                                  <p class="f-12">+10 More</p>
+                                  <p class="f-12">+{{project.worker.count}} More</p>
                                 </li>
                               </ul>
                             </div>
