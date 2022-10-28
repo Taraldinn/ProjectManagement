@@ -139,6 +139,30 @@ class ProjectListTemplateAPIView(TemplateView):
     def post(self, request, *args, **kwargs):
         pass
 
+# project detials
+class ProjectDetailTemplateAPIView(TemplateView):
+    def get(self, request, pk, *args, **kwargs):
+        if request.user.is_authenticated:
+            # redirect to user dashboard
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                project = Project.objects.get(id=pk)
+                context = {
+                    'project': project
+                }
+                return render(request, 'leader/project_detail.html', context)
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+            else:
+                return redirect('accounts:login')
+        else:
+            return redirect('accounts:login')
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
 
 
 # project view
