@@ -5,13 +5,13 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.views.generic import TemplateView
 from django.contrib.auth import get_user_model
-from projects.models import Categories, Project, Task, TaskSubmission
-from projects.forms import ProjectModelForm
+from projects.models import Categories, Project, Task
+from projects.forms import ProjectModelForm, TaskUpdateModelForm
 from accounts.forms import RegisterForm
 
 User = get_user_model()
 
-# leader dashboard index
+# leader dashboard index view
 class LeaderDashboardAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -22,16 +22,16 @@ class LeaderDashboardAPIView(TemplateView):
             # leader access
             elif request.user.user_type == 'leader':
                 # count area
-                leaders_count = User.objects.filter(user_type = 'worker').count()
-                projects_count = Project.objects.filter(is_active = True).count()
+                worker_count = User.objects.filter(user_type = 'worker').count()
+                projects_count = Project.objects.filter(Q(leader=request.user) & Q(is_active = True)).count()
                 tasks_count = Task.objects.filter(is_active = True).count()
-                submission_task_count = TaskSubmission.objects.all().count()
+                submission_task_count = '0'
 
                 # object filter area
-                ongoing_projects = Project.objects.filter(is_active=True).order_by('-id')
+                ongoing_projects = Project.objects.filter(Q(leader=request.user) & Q(is_active = True)).order_by('-id')
 
                 context = {
-                    'leader_count': leaders_count,
+                    'worker_count': worker_count,
                     'projects_count': projects_count,
                     'tasks_count': tasks_count,
                     'submission_task_count': submission_task_count,
@@ -52,7 +52,7 @@ class LeaderDashboardAPIView(TemplateView):
         pass
 
 
-# worker list view
+# worker creation and list view
 class WorkerListTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -114,8 +114,6 @@ class WorkerListTemplateAPIView(TemplateView):
         else:
             return redirect('accounts:login')
 
-
-
 # project List view
 class ProjectListTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
@@ -124,7 +122,7 @@ class ProjectListTemplateAPIView(TemplateView):
             if request.user.user_type == 'admin':
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
-                projects = Project.objects.all().order_by('-id')
+                projects = Project.objects.filter(Q(leader=request.user) & Q(is_active = True)).order_by('-id')
                 context = {
                     'projects': projects
                 }
@@ -139,7 +137,7 @@ class ProjectListTemplateAPIView(TemplateView):
     def post(self, request, *args, **kwargs):
         pass
 
-# project detials
+# project detials view
 class ProjectDetailTemplateAPIView(TemplateView):
     def get(self, request, pk, *args, **kwargs):
         if request.user.is_authenticated:
@@ -148,8 +146,12 @@ class ProjectDetailTemplateAPIView(TemplateView):
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
                 project = Project.objects.get(id=pk)
+                tasks = Task.objects.filter(project=project).order_by('-id')
+                task_update_form = TaskUpdateModelForm()
                 context = {
-                    'project': project
+                    'project': project,
+                    'tasks': tasks,
+                    'task_update_form': task_update_form
                 }
                 return render(request, 'leader/project_detail.html', context)
             elif request.user.user_type == 'worker':
@@ -162,10 +164,7 @@ class ProjectDetailTemplateAPIView(TemplateView):
     def post(self, request, *args, **kwargs):
         pass
 
-
-
-
-# project view
+# project creation view
 class ProjectCreateTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -206,3 +205,41 @@ class ProjectCreateTemplateAPIView(TemplateView):
 
         else:
             return redirect('accounts:login')
+
+
+# Task creation and list view
+class TaskListTemplateAPIView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            # redirect to user dashboard
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                tasks = Task.objects.filter(Q(project__leader=request.user) & Q(is_active=True)).order_by('-id')
+                context = {
+                    'tasks': tasks
+                }
+                return render(request, 'leader/tasks.html', context)
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+            else:
+                return redirect('accounts:login')
+        else:
+            return redirect('accounts:login')
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.method == 'post' or request.method == 'POST':
+                pass
+
+            else:
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
+
+        else:
+            return redirect('accounts:login')
+
+
+# Task issues view
+
+
+# Project Submission view

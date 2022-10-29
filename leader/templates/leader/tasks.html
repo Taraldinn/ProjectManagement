@@ -8,10 +8,8 @@
        <div class="container-fluid">
           <div class="page-title">
              <div class="row">
-                <div class="col-12 col-sm-6">
-                   <h3>
-                      {{project.name}} <span style="color:orange">Board</span>
-                   </h3>
+               <div class="col-md-6 p-0">                    
+                  <div class="form-group mb-0 me-0"></div><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgetbootstrap" data-whatever="@getbootstrap"> <i data-feather="plus-square"> </i>Create New Project</a>
                 </div>
                 <div class="col-12 col-sm-6">
                    <ol class="breadcrumb">
@@ -36,7 +34,7 @@
              <div class="col-12">
                 <div class="card">
                    <div class="card-header pb-0">
-                      <h5>Project Tracking</h5>
+                      <h5>Total Tasks</h5>
                    </div>
                    <div class="card-body pb-0">
                       <div class="kanban-block">
@@ -52,7 +50,7 @@
                                     {% for task in tasks %}
                                        {% if task.status == 'stuck' %}
                                           <div class="kanban-item">
-                                             <a class="kanban-box" href="#" data-bs-original-title="" title="" data-bs-toggle="modal" data-bs-target="#exampleModalgetbootstrap" data-whatever="@getbootstrap">
+                                             <a class="kanban-box" href="#" data-bs-original-title="" title="">
                                                 <span class="date">{{task.deadline}}</span><span class="badge badge-primary f-right">{{task.due}}</span>
                                                 <h6>{{task.name|title}}</h6>
                                                 <div class="media">
@@ -74,35 +72,6 @@
                                                 </div>
                                              </a>
                                           </div>
-
-                                          <div class="modal fade" id="exampleModalgetbootstrap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                             <div class="modal-dialog" role="document">
-                                               <div class="modal-content">
-                                                 <div class="modal-header">
-                                                   <h5 class="modal-title">{{task.name|title}}</h5>
-                                                   <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                 </div>
-                                                 <div class="modal-body">
-                                                   <div class="mb-3">
-                                                      <span>Project: </span> {{task.project.name}}
-                                                    </div>
-                                                     <div class="mb-3">
-                                                       <span>Status: </span> {{task.status}}
-                                                     </div>
-                                                     <div class="mb-3">
-                                                      <span>Due: </span> {{task.due}}
-                                                    </div>
-                                                    <div class="mb-3" style="width: 464px">
-                                                      {{task.description.html|safe}}
-                                                    </div>
-                                                     
-                                                 </div>
-                                                 <div class="modal-footer">
-                                                   <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                                                 </div>
-                                               </div>
-                                             </div>
-                                           </div>
 
                                        {% endif %}
                                     {% endfor %}
@@ -142,35 +111,6 @@
                                              </a>
                                           </div>
 
-                                          <div class="modal fade" id="exampleModalgetbootstrap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                             <div class="modal-dialog" role="document">
-                                               <div class="modal-content">
-                                                 <div class="modal-header">
-                                                   <h5 class="modal-title">{{task.name|title}}</h5>
-                                                   <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                 </div>
-                                                 <div class="modal-body">
-                                                    <div class="mb-3">
-                                                      <span>Project: </span> {{task.project.name}}
-                                                    </div>
-                                                     <div class="mb-3">
-                                                       <span>Status: </span> {{task.status}}
-                                                     </div>
-                                                     <div class="mb-3">
-                                                      <span>Due: </span> {{task.due}}
-                                                    </div>
-                                                    <div class="mb-3 task_des">
-                                                      {{task.description.html|safe}}
-                                                    </div>
-                                                     
-                                                 </div>
-                                                 <div class="modal-footer">
-                                                   <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                                                 </div>
-                                               </div>
-                                             </div>
-                                           </div>
-
                                        {% endif %}
                                     {% endfor %}
                                   </main>
@@ -209,35 +149,6 @@
                                              </a>
                                           </div>
 
-                                          <div class="modal fade" id="exampleModalgetbootstrap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                             <div class="modal-dialog" role="document">
-                                               <div class="modal-content">
-                                                 <div class="modal-header">
-                                                   <h5 class="modal-title">{{task.name|title}}</h5>
-                                                   <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                 </div>
-                                                 <div class="modal-body">
-                                                   <div class="mb-3">
-                                                      <span>Project: </span> {{task.project.name}}
-                                                    </div>
-                                                     <div class="mb-3">
-                                                       <span>Status: </span> {{task.status}}
-                                                     </div>
-                                                     <div class="mb-3">
-                                                      <span>Due: </span> {{task.due}}
-                                                    </div>
-                                                    <div class="mb-3">
-                                                      {{task.description.html|safe}}
-                                                    </div>
-                                                     
-                                                 </div>
-                                                 <div class="modal-footer">
-                                                   <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                                                 </div>
-                                               </div>
-                                             </div>
-                                           </div>
-
                                        {% endif %}
                                     {% endfor %}
                                   </main>
@@ -255,5 +166,33 @@
        <!-- Container-fluid Ends-->
     </div>
  </div>
+
+ <div class="modal fade" id="exampleModalgetbootstrap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title">New message</h5>
+         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <div class="modal-body">
+         <form>
+           <div class="mb-3">
+             <label class="col-form-label" for="recipient-name">Recipient:</label>
+             <input class="form-control" type="text" value="@getbootstrap">
+           </div>
+           <div class="mb-3">
+             <label class="col-form-label" for="message-text">Message:</label>
+             <textarea class="form-control"></textarea>
+           </div>
+         </form>
+       </div>
+       <div class="modal-footer">
+         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+         <button class="btn btn-primary" type="button">Send message</button>
+       </div>
+     </div>
+   </div>
+ </div>
+
 {% endblock body %}
     

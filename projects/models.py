@@ -155,6 +155,7 @@ class Task(models.Model):
     description = QuillField()
     deadline = models.DateField()
     is_active = models.BooleanField(default=False)
+    complete_per = models.FloatField(max_length=4, blank=True, null=True, validators = [MinValueValidator(0), MaxValueValidator(100)])
     file = models.FileField(upload_to='project_task')
 
     class Meta:
@@ -163,24 +164,50 @@ class Task(models.Model):
     def __str__(self):
         return(self.name)
 
+    @property
+    def issues(self):
+        return taskissues_set.all().order_by('-id')
 
-class TaskSubmission(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name= 'task_submissions')
+
+
+class Taskissues(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="issues")
+    status = models.CharField(max_length=7, choices=STATUS, default=1)
+    due = models.CharField(max_length=7, choices=DUE, default=1)
     today_start_work = models.DateTimeField()
     today_end_work = models.DateTimeField()
     total_data_entry_today = models.CharField(max_length=254)
-    file = models.FileField(upload_to='project_task_submission', max_length=254)
-    description = QuillField()
+    is_active = models.BooleanField(default=False)
+    complete_per = models.FloatField(max_length=4, blank=True, null=True, validators = [MinValueValidator(0), MaxValueValidator(100)])
+    file = models.FileField(upload_to='task_issues')
+
+    class Meta:
+        verbose_name_plural = 'Task Issues'
 
     def __str__(self):
-        return f"task submission of => {self.project.name}"
-
+        return(self.task.name)
+    
     def total_hours_today(self):
         pass
 
     def data_entry_per_hour(self):
         pass
 
+
+    
+
+
+class ProjectSubmission(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name= 'project_submissions')
+    status = models.CharField(max_length=7, choices=STATUS, default=1)
+    description = QuillField()
+    file = models.FileField(upload_to='project_submission', max_length=254)
+    
+
+    def __str__(self):
+        return f"task submission of => {self.project.name}"
+
+    
 
 # Hey,
 # Arif Bhy In above I have added many choices that can assain as project pirity , risk and many more you can add this If you thinik this is good !

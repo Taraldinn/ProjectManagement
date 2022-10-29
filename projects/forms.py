@@ -1,5 +1,6 @@
+from dataclasses import field
 from django import forms
-from projects.models import Categories, Project, Task, TaskSubmission
+from projects.models import Categories, Project, Task
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -36,5 +37,17 @@ class ProjectModelForm(forms.ModelForm):
             'project_client_budget': forms.NumberInput(attrs={'class': 'form-control'}),
             'project_eastemate_cost': forms.NumberInput(attrs={'class': 'form-control'}),
             'sort_description': forms.TextInput(attrs={'class': 'form-control', 'id': 'exampleFormControlTextarea4', 'rows':'3'}),
+            
+        }
+
+
+class TaskUpdateModelForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['status', 'due', 'file']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'due': forms.Select(attrs={'class': 'form-select'}),
+            'file': forms.FileInput(attrs={'class': 'form-file'})
             
         }

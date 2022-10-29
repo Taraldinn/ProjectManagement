@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 
 from django.views.generic import TemplateView
-from projects.models import Categories, Project, Task, TaskSubmission
+from projects.models import Categories, Project, Task
 
 class WorkerDashboardTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
