@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.views.generic import TemplateView
 from django.contrib.auth import get_user_model
-from projects.models import Categories, Project, Task
-from projects.forms import ProjectModelForm, TaskUpdateModelForm
+from projects.models import Categories, Project, Task, Taskissues
+from projects.forms import ProjectModelForm, TaskModelForm, ProjectSubmissionModelForm
 from accounts.forms import RegisterForm
 
 User = get_user_model()
@@ -147,11 +147,13 @@ class ProjectDetailTemplateAPIView(TemplateView):
             elif request.user.user_type == 'leader':
                 project = Project.objects.get(id=pk)
                 tasks = Task.objects.filter(project=project).order_by('-id')
-                task_update_form = TaskUpdateModelForm()
+
+                form = ProjectSubmissionModelForm()
+                
                 context = {
                     'project': project,
                     'tasks': tasks,
-                    'task_update_form': task_update_form
+                    'form': form
                 }
                 return render(request, 'leader/project_detail.html', context)
             elif request.user.user_type == 'worker':
@@ -162,7 +164,40 @@ class ProjectDetailTemplateAPIView(TemplateView):
             return redirect('accounts:login')
 
     def post(self, request, *args, **kwargs):
-        pass
+        if request.user.is_authenticated:
+            if request.method == 'post' or request.method == 'POST':
+                # here will execude tasks
+                project_id = request.POST.get('project_id')
+                project_obj = Project.objects.get(id=project_id)
+                postData = {
+                    'project': project_obj,
+                    'status': request.POST.get('status'),
+                    'description': request.POST.get('description'),
+                    'file': request.POST.get('file')
+                }
+                form = ProjectSubmissionModelForm(postData, request.FILES)
+                if form.is_valid():
+                    form.save()
+                    ## here will update all {project, task} status to DONE becouse project is submited
+                    project_obj.status = 'done'
+                    project_obj.complete_per = 100
+                    for task in project_obj.tasks.all():
+                        task.status = 'done'
+                        task.due = 'done'
+                        task.save()
+                    project_obj.save()
+                    ## end updated all info
+                    
+                    
+                    return redirect('leader:leader_project')
+                else:
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
+
+        else:
+            return redirect('accounts:login')
+
 
 # project creation view
 class ProjectCreateTemplateAPIView(TemplateView):
@@ -216,8 +251,13 @@ class TaskListTemplateAPIView(TemplateView):
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
                 tasks = Task.objects.filter(Q(project__leader=request.user) & Q(is_active=True)).order_by('-id')
+                task_issues = Taskissues.objects.filter(Q(task__project__leader=request.user) & Q(is_active=True)).order_by('-id')
+                
+                task_form = TaskModelForm()
                 context = {
-                    'tasks': tasks
+                    'tasks': tasks,
+                    'task_issues': task_issues,
+                    'task_form': task_form
                 }
                 return render(request, 'leader/tasks.html', context)
             elif request.user.user_type == 'worker':
@@ -230,8 +270,18 @@ class TaskListTemplateAPIView(TemplateView):
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.method == 'post' or request.method == 'POST':
-                pass
-
+                # here will execude tasks
+                form = TaskModelForm(request.POST, request.FILES)
+                if form.is_valid():
+                    instance = form.save()
+                    print('=================================')
+                    print(instance)
+                    print('=================================')
+                    for worker in request.POST.getlist('worker'):
+                        instance.worker.add(worker)
+                    return redirect('leader:leader_task')
+                else:
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
 

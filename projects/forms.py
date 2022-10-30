@@ -1,6 +1,6 @@
 from dataclasses import field
 from django import forms
-from projects.models import Categories, Project, Task
+from projects.models import Categories, Project, Task, Taskissues, ProjectSubmission
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -41,13 +41,42 @@ class ProjectModelForm(forms.ModelForm):
         }
 
 
-class TaskUpdateModelForm(forms.ModelForm):
+class TaskModelForm(forms.ModelForm):
+    worker = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(user_type='worker'),
+        widget=forms.CheckboxSelectMultiple
+    )
     class Meta:
         model = Task
-        fields = ['status', 'due', 'file']
+        fields = [
+            'name',
+            'project',
+            'worker',
+            'status',
+            'due',
+            'deadline',
+            'is_active',
+            'complete_per',
+            'description',
+            'file'
+        ]
         widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'project': forms.Select(attrs={'class': 'form-select'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'due': forms.Select(attrs={'class': 'form-select'}),
-            'file': forms.FileInput(attrs={'class': 'form-file'})
+            'deadline': forms.DateInput(attrs={'class': 'form-select datepicker-here', 'data-language':'en', 'placeholder': 'Date'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'checkbox_animated', 'type': 'checkbox'}),
+            'complete_per': forms.TextInput(attrs={'class': 'form-control'})
             
+        }
+
+
+# Project submission 
+class ProjectSubmissionModelForm(forms.ModelForm):
+    class Meta:
+        model = ProjectSubmission
+        fields = ['project','status', 'description', 'file']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-select'})
         }
