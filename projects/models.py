@@ -142,8 +142,6 @@ class Project(models.Model):
     def __str__(self):
         return (self.name)
 
-    def total_project_done_by_user(self):
-        pass
 
 
 class Task(models.Model):
@@ -164,9 +162,6 @@ class Task(models.Model):
     def __str__(self):
         return(self.name)
 
-    @property
-    def issues(self):
-        return issues_set.all().order_by('-id')
 
 
 
@@ -188,11 +183,6 @@ class Issues(models.Model):
     def __str__(self):
         return(self.project.name)
     
-    def total_hours_today(self):
-        pass
-
-    def data_entry_per_hour(self):
-        pass
 
 
     
@@ -207,6 +197,13 @@ class ProjectSubmission(models.Model):
 
     def __str__(self):
         return f"task submission of => {self.project.name}"
+    
+
+    def total_hours_today(self):
+        pass
+
+
+
 
     
 

@@ -1,11 +1,10 @@
-from multiprocessing import current_process
-from webbrowser import get
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.contrib import messages
 from django.views.generic import TemplateView
 from django.contrib.auth import get_user_model
-from projects.models import Categories, Project, Task, Issues
+from projects.models import Categories, Project, Task, Issues, ProjectSubmission
 from projects.forms import ProjectModelForm, TaskModelForm, ProjectSubmissionModelForm, IssuesModelForm
 from accounts.forms import RegisterForm
 
@@ -146,6 +145,9 @@ class ProjectDetailTemplateAPIView(TemplateView):
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
                 project = Project.objects.get(id=pk)
+                print('============================================')
+                print(project.issues)
+                print('============================================')
                 tasks = Task.objects.filter(project=project).order_by('-id')
 
                 form = ProjectSubmissionModelForm()
@@ -183,17 +185,21 @@ class ProjectDetailTemplateAPIView(TemplateView):
 
                 # Project form submission ======================================
                 if form.is_valid():
-                    form.save()
-                    ## here will update all {project, task} status to DONE becouse project is submited
-                    project_obj.status = 'done'
-                    project_obj.complete_per = 100
-                    for task in project_obj.tasks.all():
-                        task.status = 'done'
-                        task.due = 'done'
-                        task.save()
-                    project_obj.save()
-                    ## end updated all info
-                    return redirect('leader:leader_project')
+                    if ProjectSubmission.objects.filter(project=project_id).exists():
+                        messages.info(request, "This Project Has Been Submited..!")
+                        return redirect('leader:leader_project')
+                    else:
+                        form.save()
+                        ## here will update all {project, task} status to DONE becouse project is submited
+                        project_obj.status = 'done'
+                        project_obj.complete_per = 100
+                        for task in project_obj.tasks.all():
+                            task.status = 'done'
+                            task.due = 'done'
+                            task.save()
+                        project_obj.save()
+                        ## end updated all info
+                        return redirect('leader:leader_project')
 
                 # Issues form submission ======================================
                 if issues_form.is_valid():
@@ -310,3 +316,32 @@ class TaskListTemplateAPIView(TemplateView):
 
 
 # Project Submission view
+class ProjectSubmissionTemplateAPIView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            # redirect to user dashboard
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                submited_projects = ProjectSubmission.objects.all().order_by('-id')
+                context = {
+                    'submited_projects': submited_projects
+                }
+                return render(request, 'leader/project_submission.html', context)
+            elif request.user.user_type == 'worker':
+                return redirect('worker:worker_dashboard')
+            else:
+                return redirect('accounts:login')
+        else:
+            return redirect('accounts:login')
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.method == 'post' or request.method == 'POST':
+                # here will execude tasks
+                pass
+            else:
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
+
+        else:
+            return redirect('accounts:login')

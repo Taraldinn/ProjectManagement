@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load project_by_user %}
 
 {% block body %}
 <!-- Page Body Start-->
@@ -40,6 +41,7 @@
                   <th>Phone number</th>
                   <th>Address</th>
                   <th>Role</th>
+                  <th>Total Project Done</th>
                   <th>View profile </th>
                 </tr>
               </thead>
@@ -53,6 +55,7 @@
                   <td>{{worker.profile.phone}}</td>
                   <td>{{worker.profile.address|truncatechars:25}}</td>
                   <td>{{worker.user_type}}</td>
+                  <td>{{worker | total_project}}</td>
                   <td><a href="user-profile.html">Full Details </a></td>
                 </tr>
               {% endfor %}
