@@ -35,9 +35,18 @@
           <div class="row">
              <div class="col-12">
                 <div class="card">
-                   <div class="card-header pb-0">
-                     <div class="form-group mb-0 me-0"></div><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitProject" data-whatever="@getbootstrap"><i data-feather="check"></i>Submit Project</a>
-                   </div>
+                  {% if project.status == 'stuck' %}
+                     <div class="card-header pb-0">
+                        <div class="form-group mb-0 me-0"></div><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitIssues" data-whatever="@getbootstrap"><i data-feather="check"></i>Issues Project</a>
+                        <a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitProject" data-whatever="@getbootstrap"><i data-feather="check"></i>Submit Project</a>
+                     </div>
+                  {% elif project.status == 'working' %}
+                     <div class="card-header pb-0">
+                        <div class="form-group mb-0 me-0"></div><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitIssues" data-whatever="@getbootstrap"><i data-feather="check"></i>Issues Project</a>
+                        <a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitProject" data-whatever="@getbootstrap"><i data-feather="check"></i>Submit Project</a>
+                     </div>
+                     
+                   {% endif %}
                    <div class="card-body pb-0">
                       <div class="kanban-block">
                          <div id="demo1">
@@ -279,6 +288,63 @@
            <div class="mb-3">
             {{form.file}}
           </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-primary" type="submit">Submit Project</button>
+          </div>
+         </form>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ <div class="modal fade" id="submitIssues" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title">Issues On <span style="color:orange">{{project.name}}</span></h5>
+         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <div class="modal-body">
+         <form method="post" enctype='multipart/form-data'>
+            {% csrf_token %}
+            
+            
+
+           <div class="mb-3">
+             <label class="col-form-label" for="recipient-name">Status</label>
+             <input name="project_id" type="hidden" value="{{project.id}}"/>
+             {{issues_form.status}}
+           </div>
+           <div class="mb-3">
+             <label class="col-form-label" for="message-text">Due</label>
+             {{issues_form.due}}
+           </div>
+
+           <div class="mb-3">
+            <label class="col-form-label" for="message-text">Start Work Time</label>
+            {{issues_form.today_start_work}}
+           </div>
+
+            <div class="mb-3">
+               <label class="col-form-label" for="message-text">End Work Time</label>
+               {{issues_form.today_end_work}}
+            </div>
+
+            <div class="mb-3">
+               <label class="col-form-label" for="message-text">Total Data Entry</label>
+               {{issues_form.total_data_entry_today}}
+            </div>
+
+            <div class="mb-3">
+               <label class="col-form-label" for="message-text">Compete %</label>
+               {{issues_form.complete_per}}
+            </div>
+
+            <div class="mb-3">
+               {{issues_form.file}}
+            </div>
 
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>

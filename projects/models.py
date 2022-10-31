@@ -166,26 +166,27 @@ class Task(models.Model):
 
     @property
     def issues(self):
-        return taskissues_set.all().order_by('-id')
+        return issues_set.all().order_by('-id')
 
 
 
-class Taskissues(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="issues")
+class Issues(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="issues")
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, blank=True, null=True, related_name="issues")
     status = models.CharField(max_length=7, choices=STATUS, default=1)
     due = models.CharField(max_length=7, choices=DUE, default=1)
-    today_start_work = models.DateTimeField()
-    today_end_work = models.DateTimeField()
+    today_start_work = models.TimeField()
+    today_end_work = models.TimeField()
     total_data_entry_today = models.CharField(max_length=254)
     is_active = models.BooleanField(default=False)
     complete_per = models.FloatField(max_length=4, blank=True, null=True, validators = [MinValueValidator(0), MaxValueValidator(100)])
     file = models.FileField(upload_to='task_issues')
 
     class Meta:
-        verbose_name_plural = 'Task Issues'
+        verbose_name_plural = 'Issues'
 
     def __str__(self):
-        return(self.task.name)
+        return(self.project.name)
     
     def total_hours_today(self):
         pass

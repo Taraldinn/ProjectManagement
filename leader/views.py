@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.views.generic import TemplateView
 from django.contrib.auth import get_user_model
-from projects.models import Categories, Project, Task, Taskissues
-from projects.forms import ProjectModelForm, TaskModelForm, ProjectSubmissionModelForm
+from projects.models import Categories, Project, Task, Issues
+from projects.forms import ProjectModelForm, TaskModelForm, ProjectSubmissionModelForm, IssuesModelForm
 from accounts.forms import RegisterForm
 
 User = get_user_model()
@@ -149,11 +149,13 @@ class ProjectDetailTemplateAPIView(TemplateView):
                 tasks = Task.objects.filter(project=project).order_by('-id')
 
                 form = ProjectSubmissionModelForm()
+                issues_form = IssuesModelForm()
                 
                 context = {
                     'project': project,
                     'tasks': tasks,
-                    'form': form
+                    'form': form,
+                    'issues_form': issues_form
                 }
                 return render(request, 'leader/project_detail.html', context)
             elif request.user.user_type == 'worker':
@@ -176,6 +178,10 @@ class ProjectDetailTemplateAPIView(TemplateView):
                     'file': request.POST.get('file')
                 }
                 form = ProjectSubmissionModelForm(postData, request.FILES)
+                # Issues form submission ======================================
+                issues_form = IssuesModelForm(request.POST, request.FILES)
+
+                # Project form submission ======================================
                 if form.is_valid():
                     form.save()
                     ## here will update all {project, task} status to DONE becouse project is submited
@@ -187,11 +193,22 @@ class ProjectDetailTemplateAPIView(TemplateView):
                         task.save()
                     project_obj.save()
                     ## end updated all info
-                    
-                    
                     return redirect('leader:leader_project')
+
+                # Issues form submission ======================================
+                if issues_form.is_valid():
+                    instance = issues_form.save(commit=False)
+                    instance.project = project_obj
+                    instance.task = None
+                    instance.is_active = True
+                    instance.save()
+                    return redirect('leader:leader_project')
+                
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                
+                
+            
             else:
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
 
@@ -251,7 +268,7 @@ class TaskListTemplateAPIView(TemplateView):
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
                 tasks = Task.objects.filter(Q(project__leader=request.user) & Q(is_active=True)).order_by('-id')
-                task_issues = Taskissues.objects.filter(Q(task__project__leader=request.user) & Q(is_active=True)).order_by('-id')
+                task_issues = Issues.objects.filter(Q(task__project__leader=request.user) & Q(is_active=True)).order_by('-id')
                 
                 task_form = TaskModelForm()
                 context = {

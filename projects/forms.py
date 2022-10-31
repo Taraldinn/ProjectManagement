@@ -1,6 +1,6 @@
 from dataclasses import field
 from django import forms
-from projects.models import Categories, Project, Task, Taskissues, ProjectSubmission
+from projects.models import Categories, Project, Task, Issues, ProjectSubmission
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -79,4 +79,27 @@ class ProjectSubmissionModelForm(forms.ModelForm):
         fields = ['project','status', 'description', 'file']
         widgets = {
             'status': forms.Select(attrs={'class': 'form-select'})
+        }
+
+
+class IssuesModelForm(forms.ModelForm):
+    class Meta:
+        model = Issues
+        fields = [
+            'status',
+            'due',
+            'today_start_work',
+            'today_end_work',
+            'total_data_entry_today',
+            'complete_per',
+            'file'
+        ]
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'due': forms.Select(attrs={'class': 'form-select'}),
+            'today_start_work': forms.TimeInput(attrs={'class': 'form-select', 'type':'time'}),
+            'today_end_work': forms.TimeInput(attrs={'class': 'form-select', 'type':'time'}),
+            'total_data_entry_today': forms.TextInput(attrs={'class': 'form-control'}),
+            'complete_per': forms.NumberInput(attrs={'class': 'form-control'})
+            
         }
