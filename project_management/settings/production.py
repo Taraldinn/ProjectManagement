@@ -3,7 +3,7 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['13.231.181.15]
+ALLOWED_HOSTS = ['54.209.243.206']
 
 
 # Application definition
