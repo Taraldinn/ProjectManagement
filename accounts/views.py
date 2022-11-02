@@ -4,10 +4,10 @@ from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-from accounts.forms import RegisterForm
+from accounts.forms import RegisterForm, ProfileForm
 
 from django.contrib.auth import authenticate, login, logout
-
+from accounts.models import Profile
 User = get_user_model() # get user models
 
 # Leader user registration view 
@@ -198,3 +198,65 @@ class LoginTemplateView(TemplateView):
             else:
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
         return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
+
+
+
+# profile view
+class ProfileTemplateView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                return redirect('leader:leader_dashboard')
+            elif request.user.user_type == 'worker':
+                
+                context = {
+                    
+                }
+                return render(request, 'accounts/profile.html', context)
+        else:
+            return redirect('accounts:login')
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
+# edit profile
+class EditProfileTemplateView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.user.user_type == 'admin':
+                return redirect('admin_dashboard:admin_dashboard')
+            elif request.user.user_type == 'leader':
+                return redirect('leader:leader_dashboard')
+            elif request.user.user_type == 'worker':
+                profile_obj = Profile.objects.get(user=request.user)
+                worker_profile_form = ProfileForm(instance=profile_obj)
+                context = {
+                    'worker_profile_form': worker_profile_form
+                }
+                return render(request, 'accounts/edit_profile.html', context)
+        else:
+            return redirect('accounts:login')
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.method == 'post' or request.method == 'POST':
+                # save user info
+                profile_obj = Profile.objects.get(user=request.user)
+                worker_profile_form = ProfileForm(request.POST, request.FILES, instance=profile_obj)
+                print('=======================')
+                print(worker_profile_form)
+                print('=======================')
+                if worker_profile_form.is_valid():
+                    
+                    worker_profile_form.save()
+                    return redirect('accounts:accounts_profile')
+                else:
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                return redirect('accounts:login')
+        else:
+            return redirect('accounts:login')
+

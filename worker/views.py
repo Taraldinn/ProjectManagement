@@ -11,16 +11,21 @@ class WorkerDashboardTemplateAPIView(TemplateView):
             elif request.user.user_type == 'leader':
                 return redirect('leader:leader_dashboard')
             elif request.user.user_type == 'worker':
-                worker_project = Project.objects.filter(worker=request.user)
-                print('=========================')
-                print(worker_project)
-                print('=========================')
-                context = {
+                if request.user.profile.is_fully_filled():
+                    worker_project = Project.objects.filter(worker=request.user)
+                    print('=========================')
+                    print(worker_project)
+                    print('=========================')
+                    context = {
 
-                }
-                return render(request, 'worker/index.html', context)
+                    }
+                    return render(request, 'worker/index.html', context)
+                else:
+                    return redirect('accounts:accounts_edit_profile')
         else:
             return redirect('accounts:login')
 
     def post(self, request, *args, **kwargs):
         pass
+
+

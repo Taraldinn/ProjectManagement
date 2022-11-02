@@ -20,23 +20,26 @@ class LeaderDashboardAPIView(TemplateView):
 
             # leader access
             elif request.user.user_type == 'leader':
-                # count area
-                worker_count = User.objects.filter(user_type = 'worker').count()
-                projects_count = Project.objects.filter(Q(leader=request.user) & Q(is_active = True)).count()
-                tasks_count = Task.objects.filter(is_active = True).count()
-                submission_task_count = '0'
+                if request.user.profile.is_fully_filled():
+                    # count area
+                    worker_count = User.objects.filter(user_type = 'worker').count()
+                    projects_count = Project.objects.filter(Q(leader=request.user) & Q(is_active = True)).count()
+                    tasks_count = Task.objects.filter(is_active = True).count()
+                    submission_task_count = '0'
 
-                # object filter area
-                ongoing_projects = Project.objects.filter(Q(leader=request.user) & Q(is_active = True)).order_by('-id')
+                    # object filter area
+                    ongoing_projects = Project.objects.filter(Q(leader=request.user) & Q(is_active = True)).order_by('-id')
 
-                context = {
-                    'worker_count': worker_count,
-                    'projects_count': projects_count,
-                    'tasks_count': tasks_count,
-                    'submission_task_count': submission_task_count,
-                    'ongoing_projects': ongoing_projects
-                }
-                return render(request, 'leader/index.html', context)
+                    context = {
+                        'worker_count': worker_count,
+                        'projects_count': projects_count,
+                        'tasks_count': tasks_count,
+                        'submission_task_count': submission_task_count,
+                        'ongoing_projects': ongoing_projects
+                    }
+                    return render(request, 'leader/index.html', context)
+                else:
+                    return redirect('accounts:accounts_edit_profile')
             
             # worker access
             elif request.user.user_type == 'worker':
