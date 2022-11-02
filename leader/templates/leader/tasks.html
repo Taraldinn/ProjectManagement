@@ -197,8 +197,12 @@
 
                                 {% for issues in task_issues %}
                                   <tr>
-                                    <td>{{issues.task.project.name}}</td>
-                                    <td>{{issues.task.name}}</td>
+                                    <td>{{issues.project.name}}</td>
+                                    {% if issues.task %}
+                                      <td>{{issues.task.name}}</td>
+                                    {% else %}
+                                      <td>-----</td>
+                                    {% endif %}
                                     <td>{{issues.status}}</td>
                                     <td>{{issues.due}}</td>
                                     <td>{{issues.today_start_work}}</td>

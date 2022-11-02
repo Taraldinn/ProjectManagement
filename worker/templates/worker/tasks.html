@@ -1,259 +1,165 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block body %}
+
 <!-- Page Body Start-->
-<div class="page-body-wrapper default-menu default-menu">
-    {% include 'sidebar.html' %}
-    <div class="page-body">
-       <div class="container-fluid">
-          <div class="page-title">
-             <div class="row">
-                <div class="col-12 col-sm-6">
-                   <h3>
-                      {{project.name}} <span style="color:orange">Board</span>
-                   </h3>
-                </div>
-                <div class="col-12 col-sm-6">
-                   <ol class="breadcrumb">
-                      <li class="breadcrumb-item">
-                         <a href="index.html" data-bs-original-title="" title="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
-                               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                               <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                            </svg>
-                         </a>
-                      </li>
-                      <li class="breadcrumb-item"> Apps</li>
-                      <li class="breadcrumb-item active"> Kanban Board</li>
-                   </ol>
-                </div>
-             </div>
+<div class="page-body-wrapper">
+  <!-- Page Sidebar Start-->
+  
+  {% include 'sidebar.html' %}
+
+  <!-- Page Sidebar Ends-->
+  <div class="page-body">
+    <div class="container-fluid">
+      <div class="page-title">
+        <div class="row">
+          <div class="col-12 col-sm-6">
+            <h3>Tasks</h3>
           </div>
-       </div>
-       <!-- Container-fluid starts-->
-       <div class="container-fluid jkanban-container">
-          <div class="row">
-             <div class="col-12">
-                <div class="card">
-                   <div class="card-header pb-0">
-                      <h5>Project Tracking</h5>
-                   </div>
-                   <div class="card-body pb-0">
-                      <div class="kanban-block">
-                         <div id="demo1">
-                            <div class="kanban-container" style="width: 1290px;">
-
-                                 
-                               <div data-id="_todo" data-order="1" class="kanban-board" style="width: 400px; margin-left: 15px; margin-right: 15px;">
-                                  <header class="kanban-board-header">
-                                     <div class="kanban-title-board">Stuck</div>
-                                  </header>
-                                  <main class="kanban-drag">
-                                    {% for task in tasks %}
-                                       {% if task.status == 'stuck' %}
-                                          <div class="kanban-item">
-                                             <a class="kanban-box" href="#" data-bs-original-title="" title="" data-bs-toggle="modal" data-bs-target="#exampleModalgetbootstrap" data-whatever="@getbootstrap">
-                                                <span class="date">{{task.deadline}}</span><span class="badge badge-primary f-right">{{task.due}}</span>
-                                                <h6>{{task.name|title}}</h6>
-                                                <div class="media">
-                                                   <div class="media-body">
-                                                      {{description.html|safe|truncatechars:10}}
-                                                   </div>
-                                                </div>
-                                                <div class="d-flex mt-3">
-                                                   <div class="customers">
-                                                      <ul>
-                                                         <li class="d-inline-block me-3">
-                                                            <p class="f-12">+{{task.worker.count}}</p>
-                                                         </li>
-                                                      {% for worker in task.worker.all %}
-                                                         <li class="d-inline-block"><img class="img-20 rounded-circle" src="{{worker.profile.employe_image.url}}" alt="" data-original-title="" title=""></li>
-                                                      {% endfor %} 
-                                                      </ul>
-                                                   </div>
-                                                </div>
-                                             </a>
-                                          </div>
-
-                                          <div class="modal fade" id="exampleModalgetbootstrap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                             <div class="modal-dialog" role="document">
-                                               <div class="modal-content">
-                                                 <div class="modal-header">
-                                                   <h5 class="modal-title">{{task.name|title}}</h5>
-                                                   <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                 </div>
-                                                 <div class="modal-body">
-                                                   <div class="mb-3">
-                                                      <span>Project: </span> {{task.project.name}}
-                                                    </div>
-                                                     <div class="mb-3">
-                                                       <span>Status: </span> {{task.status}}
-                                                     </div>
-                                                     <div class="mb-3">
-                                                      <span>Due: </span> {{task.due}}
-                                                    </div>
-                                                    <div class="mb-3" style="width: 464px">
-                                                      {{task.description.html|safe}}
-                                                    </div>
-                                                     
-                                                 </div>
-                                                 <div class="modal-footer">
-                                                   <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                                                 </div>
-                                               </div>
-                                             </div>
-                                           </div>
-
-                                       {% endif %}
-                                    {% endfor %}
-                                  </main>
-                               </div>
-
-
-                               <div data-id="_doing" data-order="2" class="kanban-board" style="width: 400px; margin-left: 15px; margin-right: 15px;">
-                                  <header class="kanban-board-header">
-                                     <div class="kanban-title-board">Working</div>
-                                  </header>
-                                  <main class="kanban-drag">
-
-                                    {% for task in tasks %}
-                                       {% if task.status == 'working' %}
-                                          <div class="kanban-item">
-                                             <a class="kanban-box" href="#" data-bs-original-title="" title="" data-bs-toggle="modal" data-bs-target="#exampleModalgetbootstrap" data-whatever="@getbootstrap">
-                                                <span class="date">{{task.deadline}}</span><span class="badge badge-primary f-right">{{task.due}}</span>
-                                                <h6>{{task.name}}</h6>
-                                                <div class="media">
-                                                   <div class="media-body">
-                                                      {{description.html|safe}}
-                                                   </div>
-                                                </div>
-                                                <div class="d-flex mt-3">
-                                                   <div class="customers">
-                                                      <ul>
-                                                         <li class="d-inline-block me-3">
-                                                            <p class="f-12">+{{task.worker.count}}</p>
-                                                         </li>
-                                                      {% for worker in task.worker.all %}
-                                                         <li class="d-inline-block"><img class="img-20 rounded-circle" src="{{worker.profile.employe_image.url}}" alt="" data-original-title="" title=""></li>
-                                                      {% endfor %} 
-                                                      </ul>
-                                                   </div>
-                                                </div>
-                                             </a>
-                                          </div>
-
-                                          <div class="modal fade" id="exampleModalgetbootstrap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                             <div class="modal-dialog" role="document">
-                                               <div class="modal-content">
-                                                 <div class="modal-header">
-                                                   <h5 class="modal-title">{{task.name|title}}</h5>
-                                                   <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                 </div>
-                                                 <div class="modal-body">
-                                                    <div class="mb-3">
-                                                      <span>Project: </span> {{task.project.name}}
-                                                    </div>
-                                                     <div class="mb-3">
-                                                       <span>Status: </span> {{task.status}}
-                                                     </div>
-                                                     <div class="mb-3">
-                                                      <span>Due: </span> {{task.due}}
-                                                    </div>
-                                                    <div class="mb-3 task_des">
-                                                      {{task.description.html|safe}}
-                                                    </div>
-                                                     
-                                                 </div>
-                                                 <div class="modal-footer">
-                                                   <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                                                 </div>
-                                               </div>
-                                             </div>
-                                           </div>
-
-                                       {% endif %}
-                                    {% endfor %}
-                                  </main>
-                               </div>
-
-
-                               <div data-id="_done" data-order="3" class="kanban-board" style="width: 400px; margin-left: 15px; margin-right: 15px;">
-                                  <header class="kanban-board-header">
-                                     <div class="kanban-title-board">Done</div>
-                                  </header>
-                                  <main class="kanban-drag">
-
-                                    {% for task in tasks %}
-                                       {% if task.status == 'done' %}
-                                          <div class="kanban-item">
-                                             <a class="kanban-box" href="#" data-bs-original-title="" title="" data-bs-toggle="modal" data-bs-target="#exampleModalgetbootstrap" data-whatever="@getbootstrap">
-                                                <span class="date">{{task.deadline}}</span><span class="badge badge-primary f-right">{{task.due}}</span>
-                                                <h6>{{task.name}}</h6>
-                                                <div class="media">
-                                                   <div class="media-body">
-                                                      {{description.html|safe}}
-                                                   </div>
-                                                </div>
-                                                <div class="d-flex mt-3">
-                                                   <div class="customers">
-                                                      <ul>
-                                                         <li class="d-inline-block me-3">
-                                                            <p class="f-12">+{{task.worker.count}}</p>
-                                                         </li>
-                                                      {% for worker in task.worker.all %}
-                                                         <li class="d-inline-block"><img class="img-20 rounded-circle" src="{{worker.profile.employe_image.url}}" alt="" data-original-title="" title=""></li>
-                                                      {% endfor %} 
-                                                      </ul>
-                                                   </div>
-                                                </div>
-                                             </a>
-                                          </div>
-
-                                          <div class="modal fade" id="exampleModalgetbootstrap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                             <div class="modal-dialog" role="document">
-                                               <div class="modal-content">
-                                                 <div class="modal-header">
-                                                   <h5 class="modal-title">{{task.name|title}}</h5>
-                                                   <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                 </div>
-                                                 <div class="modal-body">
-                                                   <div class="mb-3">
-                                                      <span>Project: </span> {{task.project.name}}
-                                                    </div>
-                                                     <div class="mb-3">
-                                                       <span>Status: </span> {{task.status}}
-                                                     </div>
-                                                     <div class="mb-3">
-                                                      <span>Due: </span> {{task.due}}
-                                                    </div>
-                                                    <div class="mb-3">
-                                                      {{task.description.html|safe}}
-                                                    </div>
-                                                     
-                                                 </div>
-                                                 <div class="modal-footer">
-                                                   <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                                                 </div>
-                                               </div>
-                                             </div>
-                                           </div>
-
-                                       {% endif %}
-                                    {% endfor %}
-                                  </main>
-                               </div>
-
-
-                            </div>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-             </div>
+          <div class="col-12 col-sm-6">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">                                       <i data-feather="home"></i></a></li>
+              <li class="breadcrumb-item">Apps</li>
+              <li class="breadcrumb-item active">Task</li>
+            </ol>
           </div>
-       </div>
-       <!-- Container-fluid Ends-->
+        </div>
+      </div>
     </div>
- </div>
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+      <div class="email-wrap bookmark-wrap">
+        <div class="row">
+          <div class="col-xl-3 box-col-3 xl-30">
+            <div class="email-sidebar"><a class="btn btn-primary email-aside-toggle" href="javascript:void(0)">bookmark filter</a>
+              <div class="email-left-aside">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="email-app-sidebar left-bookmark">
+                      <div class="media">
+                        <div class="media-size-email"><img class="me-3 rounded-circle" src="/static/assets/images/user/user.png" alt=""></div>
+                        <div class="media-body">
+                          <h6 class="f-w-600">MARK JENCO</h6>
+                          <p>Markjecno@gmail.com</p>
+                        </div>
+                      </div>
+                      <ul class="nav main-menu custom-scrollbar" role="tablist">
+
+                        <li class="nav-item"><span class="main-title"> Functions </span></li>
+                        <li><a id="pills-created-tab" data-bs-toggle="pill" href="#pills-created" role="tab" aria-controls="pills-created" aria-selected="true"><span class="title"> Tasks List </span></a></li>
+                        <li><a class="show" id="pills-assigned-tab" data-bs-toggle="pill" href="#pills-assigned" role="tab" aria-controls="pills-assigned" aria-selected="false"><span class="title">Issues List</span></a></li>
+                        
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-9 box-col-9 col-md-12 xl-70">
+            <div class="email-right-aside bookmark-tabcontent">
+              <div class="card email-body radius-left">
+                <div class="ps-0">
+                  <div class="tab-content">
+
+
+                    <div class="tab-pane fade active show" id="pills-created" role="tabpanel" aria-labelledby="pills-created-tab">
+                      <div class="card mb-0">
+                        <div class="card-header d-flex">
+                          <h5 class="mb-0">Task List</h5><a href="#"><i class="me-2" data-feather="printer"></i>Print</a>
+                        </div>
+                        <div class="card-body p-0">
+                          <div class="taskadd">
+                            <div class="table-responsive">
+                              <table class="table">
+                                {% for task in tasks %}
+                                  <tr>
+                                    <td>
+                                      <h6 class="task_title_0">{{task.name}}</h6>
+                                      <p class="project_name_0">{{task.project.name}}</p>
+                                    </td>
+                                    <td>
+                                      <p class="task_desc_0">{{task.description.html|safe|truncatechars:25}}</p>
+                                    </td>
+                                    
+                                    <td>
+                                      <a href="javascript:void(0)"><i data-feather="edit-3"></i></a>
+                                      
+                                      <a class="pl-2" href="javascript:void(0)"><i data-feather="trash-2"></i></a>
+                                    </td>
+                                    
+                                    
+                                  </tr>
+                                {% endfor %}
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="fade tab-pane" id="pills-assigned" role="tabpanel" aria-labelledby="pills-assigned-tab">
+                      <div class="card mb-0">
+                        <div class="card-header d-flex">
+                          <h6 class="mb-0">Issues List</h6><a href="javascript:void(0)"><i class="me-2" data-feather="printer"></i>Print</a>
+                        </div>
+                        <div class="card-body p-0">
+                          <div class="taskadd">
+                            <div class="table-responsive" style="padding:20px">
+                              <table class="display" id="advance-1">
+                                <thead>
+                                  <tr>
+                                    <th>Project</th>
+                                    <th>Task</th>
+                                    <th>Status</th>
+                                    <th>Due</th>
+                                    <th>Start work</th>
+                                    <th>End work</th>
+                                    <th>Data entry</th>
+                                    <th>Complete %</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for issues in task_issues %}
+                                  <tr>
+                                    <td>{{issues.project.name}}</td>
+                                    {% if issues.task %}
+                                      <td>{{issues.task.name}}</td>
+                                    {% else %}
+                                      <td>-----</td>
+                                    {% endif %}
+                                    <td>{{issues.status}}</td>
+                                    <td>{{issues.due}}</td>
+                                    <td>{{issues.today_start_work}}</td>
+                                    <td>{{issues.today_end_work}}</td>
+                                    <td>{{issues.total_data_entry_today}}</td>
+                                    <td>{{issues.complete_per}}%</td>
+                                  </tr>
+                                {% endfor %} 
+
+                                </tbody>
+                                
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Container-fluid Ends-->
+  </div>
+</div>
+
 {% endblock body %}
     

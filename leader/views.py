@@ -277,7 +277,7 @@ class TaskListTemplateAPIView(TemplateView):
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
                 tasks = Task.objects.filter(Q(project__leader=request.user) & Q(is_active=True)).order_by('-id')
-                task_issues = Issues.objects.filter(Q(task__project__leader=request.user) & Q(is_active=True)).order_by('-id')
+                task_issues = Issues.objects.filter(Q(project__leader=request.user) & Q(is_active=True)).order_by('-id')
                 
                 task_form = TaskModelForm()
                 context = {
@@ -326,7 +326,7 @@ class ProjectSubmissionTemplateAPIView(TemplateView):
             if request.user.user_type == 'admin':
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
-                submited_projects = ProjectSubmission.objects.all().order_by('-id')
+                submited_projects = ProjectSubmission.objects.filter(project__leader=request.user).order_by('-id')
                 context = {
                     'submited_projects': submited_projects
                 }
