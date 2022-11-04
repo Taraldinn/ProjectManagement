@@ -258,7 +258,7 @@ class ProjectCreateTemplateAPIView(TemplateView):
                     instance.save()
                     for worker in request.POST.getlist('worker'):
                         instance.worker.add(worker)
-                    return redirect('leader:leader_project')
+                    return redirect('leader:leader_task')
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
