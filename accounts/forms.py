@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from accounts.models import Profile
+from accounts.models import Profile, Notification
 User = get_user_model()
 
 class RegisterForm(UserCreationForm):
@@ -36,4 +36,29 @@ class ProfileForm(forms.ModelForm):
             'marital_Status': forms.CheckboxInput(attrs={'type': 'checkbox'})
             
         }
+
+
+class NotificationForm(forms.ModelForm):
+    # to_leader = forms.ModelMultipleChoiceField(
+    #     queryset=User.objects.filter(user_type='leader'),
+    #     widget=forms.CheckboxSelectMultiple
+    # )
+
+    to_worker = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(user_type='worker'),
+        widget=forms.CheckboxSelectMultiple
+    )
+    class Meta:
+        model = Notification
+        fields = [
+            'subject',
+            'to_worker',
+            'is_active',
+            'message'
+        ]
+        widgets = {
+            'subject': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Enter subject'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'checkbox_animated', 'type': 'checkbox'})
+        }
+
 

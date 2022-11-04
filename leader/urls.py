@@ -10,4 +10,5 @@ urlpatterns = [
     path('dashboard/project/add/new/', views.ProjectCreateTemplateAPIView.as_view(), name='leader_project_add'),
     path('dashboard/project/submited/list/', views.ProjectSubmissionTemplateAPIView.as_view(), name='leader_project_submission'),
     path('dashboard/task/', views.TaskListTemplateAPIView.as_view(), name='leader_task'),
+    path('dashboard/notification/send/', views.SendNotificationTemplateView.as_view(), name='leader_send_notification'),
 ]

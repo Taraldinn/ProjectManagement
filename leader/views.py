@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth import get_user_model
 from projects.models import Categories, Project, Task, Issues, ProjectSubmission
 from projects.forms import ProjectModelForm, TaskModelForm, ProjectSubmissionModelForm, IssuesModelForm
-from accounts.forms import RegisterForm
+from accounts.forms import RegisterForm, NotificationForm
 
 User = get_user_model()
 
@@ -343,6 +343,50 @@ class ProjectSubmissionTemplateAPIView(TemplateView):
             if request.method == 'post' or request.method == 'POST':
                 # here will execude tasks
                 pass
+            else:
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
+
+        else:
+            return redirect('accounts:login')
+
+
+# Send Notification view
+class SendNotificationTemplateView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.user.profile.is_fully_filled():
+                # redirect to user dashboard
+                if request.user.user_type == 'admin':
+                    return redirect('admin_dashboard:admin_dashboard')
+                elif request.user.user_type == 'leader':
+                    notification_form = NotificationForm()
+                    context = {
+                        'notification_form': notification_form
+                    }
+                    return render(request, 'leader/send_notification.html', context)
+                elif request.user.user_type == 'worker':
+                    return redirect('worker:worker_dashboard')
+                else:
+                    return redirect('accounts:login')
+            else:
+                return redirect('accounts:accounts_edit_profile')
+        else:
+            return redirect('accounts:login')
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.method == 'post' or request.method == 'POST':
+                # here will execude tasks
+                notification_form = NotificationForm(request.POST, request.FILES)
+                if notification_form.is_valid():
+                    instance = notification_form.save(commit=False)
+                    instance.from_leader = request.user
+                    instance.save()
+                    for worker in request.POST.getlist('to_worker'):
+                        instance.to_worker.add(worker)
+                    return redirect('leader:leader_dashboard')
+                else:
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
 

@@ -140,7 +140,6 @@ class ProjectDetailTemplateView(TemplateView):
         else:
             return redirect('accounts:login')
 
-
 # Task creation and list view
 class TaskListTemplateView(TemplateView):
     def get(self, request, *args, **kwargs):
@@ -187,7 +186,6 @@ class TaskListTemplateView(TemplateView):
         else:
             return redirect('accounts:login')
 
-
 # Project Submission view
 class ProjectSubmissionTemplateView(TemplateView):
     def get(self, request, *args, **kwargs):
@@ -199,7 +197,7 @@ class ProjectSubmissionTemplateView(TemplateView):
                 elif request.user.user_type == 'leader':
                     return redirect('leader:leader_dashboard')
                 elif request.user.user_type == 'worker':
-                    submited_projects = ProjectSubmission.objects.filter(project__worker=request.user).order_by('-id')
+                    submited_projects = ProjectSubmission.objects.filter(Q(project__worker=request.user) & Q(project__status='done')).order_by('-id')
                     context = {
                         'submited_projects': submited_projects
                     }

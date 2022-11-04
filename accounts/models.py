@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from django_quill.fields import QuillField
+
 
 # created user Custom Manager
 class UserManager(BaseUserManager):
@@ -150,11 +152,13 @@ class Bank(models.Model):
 #notification model
 class Notification(models.Model):
     subject = models.CharField(max_length=255, blank=False, null=False)
-    message = models.CharField(max_length=500, blank=False, null=False)
+    from_admin = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='from_admin')
+    from_leader = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='from_leader')
     to_leader = models.ManyToManyField(User, blank=True, related_name='to_leader')
     to_worker = models.ManyToManyField(User, blank=True, related_name='to_worker')
     is_active = models.BooleanField(default=False)
     is_seen = models.BooleanField(default=False)
+    message = QuillField()
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
