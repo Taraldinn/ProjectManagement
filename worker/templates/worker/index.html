@@ -33,11 +33,11 @@
                 <div class="media-body"> 
                   <div class="greeting-user">
                     <h1>Hello, {{request.user.profile.full_name}}</h1>
-                    <p>Welcome back, your dashboard is ready!</p><a class="btn btn-outline-white_color" href="blog-single.html">Get Started<i class="icon-arrow-right">                           </i></a>
+                    <p>Welcome back, your dashboard is ready!</p><a class="btn btn-outline-white_color" href="{% url 'worker:worker_project' %}">Start Project<i class="icon-arrow-right"></i></a>
                   </div>
                 </div>
               </div>
-              <div class="cartoon-img"><img class="img-fluid" src="../assets/images/images.svg" alt=""></div>
+              <div class="cartoon-img"><img class="img-fluid" src="/static/assets/images/images.svg" alt=""></div>
             </div>
           </div>
         </div>
