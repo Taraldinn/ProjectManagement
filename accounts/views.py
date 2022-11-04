@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from accounts.forms import RegisterForm, ProfileForm
 
+from django.contrib.auth import logout
+
 from django.contrib.auth import authenticate, login, logout
 from accounts.models import Notification, Profile
 User = get_user_model() # get user models
@@ -199,7 +201,10 @@ class LoginTemplateView(TemplateView):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
         return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
 
-
+# user logout view    
+def logoutView(request):
+    logout(request)
+    return redirect('accounts:login')
 
 # profile view
 class ProfileTemplateView(TemplateView):
@@ -264,4 +269,4 @@ def seenNotification(request, pk):
     notification_obj.is_seen = True
     notification_obj.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        
+

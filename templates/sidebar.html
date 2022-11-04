@@ -154,15 +154,15 @@
               </g>
             </svg>
           </div>
-          {% if request.user.authenticated %}
+          {% if request.user.is_authenticated %}
             <ul class="profile-dropdown onhover-show-div">
-              <li><a href="user-profile.html"><i data-feather="user"></i><span>Account </span></a></li>
-              <li><a href="edit-profile.html"><i data-feather="settings"></i><span>Settings</span></a></li>
-              <li><a href="login.html"><i data-feather="log-in"> </i><span>Log out</span></a></li>
-          </ul>
+              <li><a href="{% url 'accounts:accounts_profile' %}"><i data-feather="user"></i><span>Account </span></a></li>
+              <li><a href="{% url 'accounts:accounts_edit_profile' %}"><i data-feather="settings"></i><span>Settings</span></a></li>
+              <li><a href="{% url 'accounts:logout' %}"><i data-feather="log-in"> </i><span>Log out</span></a></li>
+            </ul>
           {% else %}
             <ul class="profile-dropdown onhover-show-div">
-              <li><a href="login.html"><i data-feather="log-in"> </i><span>Log in</span></a></li>
+              <li><a href="{% url 'accounts:login' %}"><i data-feather="log-in"> </i><span>Log in</span></a></li>
             </ul>
           {% endif %}
         </li>
