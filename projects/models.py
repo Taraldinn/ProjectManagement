@@ -89,12 +89,11 @@ WANT_CHOICE = (
     ("0", "Do not want to do"),
             ("1", "Want to do"),
 )
-SKILL_CHOICE = (
-    ("0", "Can not do"),
-            ("1", "Willing to learn"),
-            ("2", "Knows a little"),
-            ("3", "Knows a lot"),
-            ("4", "Proficient"),
+
+CATEGORIES = (
+            ('Data Entry', 'Data Entry'),
+            ('Web Development', 'Web Development'),
+            ('Ecommerce', 'Ecommerce'),
 )
 
 STATUS = (
@@ -172,7 +171,7 @@ class Issues(models.Model):
     due = models.CharField(max_length=7, choices=DUE, default=1)
     today_start_work = models.TimeField()
     today_end_work = models.TimeField()
-    total_data_entry_today = models.CharField(max_length=254)
+    total_data_entry_today = models.CharField(max_length=254, default=0, blank=True, null=True)
     is_active = models.BooleanField(default=False)
     complete_per = models.FloatField(max_length=4, blank=True, null=True, validators = [MinValueValidator(0), MaxValueValidator(100)])
     file = models.FileField(upload_to='task_issues')
@@ -182,9 +181,6 @@ class Issues(models.Model):
 
     def __str__(self):
         return(self.project.name)
-    
-
-
     
 
 
