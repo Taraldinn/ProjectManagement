@@ -11,7 +11,7 @@ def notification_leader(user):
     if notifications.exists():
         return notifications
     else:
-        return "You don't have any Notification!"
+        return None
 
 @register.filter
 def notification_worker(user):
@@ -20,6 +20,7 @@ def notification_worker(user):
         return notifications
     else:
         return "You don't have any Notification!"
+
 
 @register.filter
 def notification_leader_count(user):

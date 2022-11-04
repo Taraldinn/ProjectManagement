@@ -32,7 +32,6 @@ class WorkerDashboardTemplateAPIView(TemplateView):
     def post(self, request, *args, **kwargs):
         pass
 
-
 # project List view
 class ProjectListTemplateView(TemplateView):
     def get(self, request, *args, **kwargs):

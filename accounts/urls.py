@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.LoginTemplateView.as_view(), name='login'), # login page route
     path('worker/dashboard/profile/', views.ProfileTemplateView.as_view(), name='accounts_profile'), # login page route
     path('worker/dashboard/profile/edit/', views.EditProfileTemplateView.as_view(), name='accounts_edit_profile'), # login page route
+    path('worker/dashboard/notification/seen/<str:pk>/', views.seenNotification, name='accounts_seen_notification'),
 ]

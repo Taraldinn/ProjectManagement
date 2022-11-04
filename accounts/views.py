@@ -7,7 +7,7 @@ from django.contrib import messages
 from accounts.forms import RegisterForm, ProfileForm
 
 from django.contrib.auth import authenticate, login, logout
-from accounts.models import Profile
+from accounts.models import Notification, Profile
 User = get_user_model() # get user models
 
 # Leader user registration view 
@@ -246,9 +246,6 @@ class EditProfileTemplateView(TemplateView):
                 # save user info
                 profile_obj = Profile.objects.get(user=request.user)
                 worker_profile_form = ProfileForm(request.POST, request.FILES, instance=profile_obj)
-                print('=======================')
-                print(worker_profile_form)
-                print('=======================')
                 if worker_profile_form.is_valid():
                     
                     worker_profile_form.save()
@@ -260,3 +257,11 @@ class EditProfileTemplateView(TemplateView):
         else:
             return redirect('accounts:login')
 
+# Seen notification view
+def seenNotification(request, pk):
+    notification_obj = Notification.objects.get(id=pk)
+    notification_obj.is_active = False
+    notification_obj.is_seen = True
+    notification_obj.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
