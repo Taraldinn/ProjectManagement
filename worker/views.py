@@ -16,9 +16,13 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                 return redirect('leader:leader_dashboard')
             elif request.user.user_type == 'worker':
                 if request.user.profile.is_fully_filled():
-                    worker_project = Project.objects.filter(worker=request.user)
+                    worker_project = Project.objects.filter(Q(worker=request.user) & Q(status='done'))
+                    worker_task = Task.objects.filter(Q(worker=request.user) & Q(status='done'))
+                    worker_issues = Issues.objects.filter(Q(project__worker=request.user))
                     context = {
-
+                        'worker_project': worker_project,
+                        'worker_task': worker_task,
+                        'worker_issues': worker_issues
                     }
                     return render(request, 'worker/index.html', context)
                 else:
