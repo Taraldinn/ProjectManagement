@@ -17,9 +17,6 @@ class WorkerDashboardTemplateAPIView(TemplateView):
             elif request.user.user_type == 'worker':
                 if request.user.profile.is_fully_filled():
                     worker_project = Project.objects.filter(worker=request.user)
-                    print('=========================')
-                    print(worker_project)
-                    print('=========================')
                     context = {
 
                     }
