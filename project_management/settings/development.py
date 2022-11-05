@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'projects',
     'leader',
     'worker',
+    'payments',
     'admin_dashboard',
     'django_quill',
     

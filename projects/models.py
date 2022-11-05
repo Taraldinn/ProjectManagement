@@ -1,4 +1,3 @@
-from email.policy import default
 from django.db import models
 from django_quill.fields import QuillField
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -140,6 +139,7 @@ class Project(models.Model):
 
     def __str__(self):
         return (self.name)
+
 
 
 

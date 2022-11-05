@@ -1,9 +1,7 @@
-from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
 from django_quill.fields import QuillField
 
 
@@ -124,7 +122,7 @@ class Profile(models.Model):
     def save_profile(sender, instance, **kwargs):
         instance.profile.save()  # save profile object
 
-
+# bank info model
 class Bank(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE,
                                 related_name='bank')  # relation between user and profile models
@@ -163,3 +161,4 @@ class Notification(models.Model):
 
     def __str__(self) -> str:
         return self.subject
+
