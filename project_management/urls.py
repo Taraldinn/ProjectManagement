@@ -10,6 +10,7 @@ urlpatterns = [
     path('leader/', include('leader.urls', namespace='leader')),
     path('worker/', include('worker.urls', namespace='worker')),
     path('admin/', include('admin_dashboard.urls', namespace='admin_dashboard')),
+    path('payments/', include('payments.urls', namespace='payments')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,

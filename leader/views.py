@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.db.models import Q
 from django.contrib import messages
 from django.views.generic import TemplateView
@@ -258,7 +259,7 @@ class ProjectCreateTemplateAPIView(TemplateView):
                     instance.save()
                     for worker in request.POST.getlist('worker'):
                         instance.worker.add(worker)
-                    return redirect('leader:leader_task')
+                    return redirect(reverse('payments:payment_worker') + "?pay_for=" + str(instance.pk))
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
@@ -313,9 +314,6 @@ class TaskListTemplateAPIView(TemplateView):
 
         else:
             return redirect('accounts:login')
-
-
-# Task issues view
 
 
 # Project Submission view
@@ -392,3 +390,6 @@ class SendNotificationTemplateView(TemplateView):
 
         else:
             return redirect('accounts:login')
+
+
+
