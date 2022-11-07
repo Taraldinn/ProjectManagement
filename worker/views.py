@@ -21,7 +21,7 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                     worker_task = Task.objects.filter(Q(worker=request.user) & Q(status='done'))
                     worker_issues = Issues.objects.filter(Q(project__worker=request.user))
                     
-                    worker_earning_obj = PaymentProjectBased.objects.filter(Q(receivers=request.user) & Q(is_received=True))
+                    worker_earning_obj = PaymentProjectBased.objects.filter(Q(project__accept_status='accept') & Q(receivers=request.user) & Q(is_received=True))
                     worker_earning = 0
                     for worker in worker_earning_obj:
                         worker_earning += worker.amount
@@ -161,6 +161,7 @@ class AcceptProjectTemplateView(TemplateView):
                 elif request.user.user_type == 'worker':
                     project = Project.objects.get(id=pk)
                     project.status = 'working'
+                    project.accept_status = 'accept'
                     project.save()
                     payment_obj = PaymentProjectBased.objects.get(project=project)
                     payment_obj.is_received = True
@@ -175,7 +176,6 @@ class AcceptProjectTemplateView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         pass
-
 
 # Task creation and list view
 class TaskListTemplateView(TemplateView):

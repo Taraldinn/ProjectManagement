@@ -89,10 +89,11 @@ WANT_CHOICE = (
             ("1", "Want to do"),
 )
 
-CATEGORIES = (
-            ('Data Entry', 'Data Entry'),
-            ('Web Development', 'Web Development'),
-            ('Ecommerce', 'Ecommerce'),
+ACCEPT_STATUS = (
+    ('draft', 'draft'),
+    ('decline', 'decline'),
+    ('accept', 'accept')
+            
 )
 
 STATUS = (
@@ -121,6 +122,7 @@ class Project(models.Model):
     leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')# done
     worker = models.ManyToManyField(User)# done
     status = models.CharField(max_length=7, choices=STATUS, default=1)# done
+    accept_status = models.CharField(max_length=15, choices=ACCEPT_STATUS, default=ACCEPT_STATUS[0])# done
     work_start_date = models.DateField()# done
     work_end_date = models.DateField()# done
     deadline = models.DateField()# done
