@@ -37,17 +37,18 @@
              <div class="col-12">
                 <div class="card">
                   <h3 class="p-3">
-                     <span style="color:orange">Task Board</span>
+                     <span style="color:orange">Tasks Board</span>
                   </h3>
 
                   {% if project.status == 'stuck' %}
                      <div class="card-header pb-0">
-                        <div class="form-group mb-0 me-0"></div><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitIssues" data-whatever="@getbootstrap"><i data-feather="check"></i>Issues Project</a>
-                        <a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitProject" data-whatever="@getbootstrap"><i data-feather="check"></i>Submit Project</a>
+                        <div class="form-group mb-0 me-0"></div>
+                        <a href="#accept" class="btn btn-primary"><i data-feather="check"></i>Accept Project</a>
                      </div>
                   {% elif project.status == 'working' %}
                      <div class="card-header pb-0">
-                        <div class="form-group mb-0 me-0"></div><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitIssues" data-whatever="@getbootstrap"><i data-feather="check"></i>Issues Project</a>
+                        <div class="form-group mb-0 me-0"></div>
+                        <a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitIssues" data-whatever="@getbootstrap"><i data-feather="check"></i>Issues Project</a>
                         <a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#submitProject" data-whatever="@getbootstrap"><i data-feather="check"></i>Submit Project</a>
                      </div>
                      

@@ -6,6 +6,7 @@ from projects.forms import IssuesModelForm, ProjectSubmissionModelForm, TaskMode
 from projects.models import Categories, Issues, Project, ProjectSubmission, Task
 from django.db.models import Q
 from django.contrib import messages
+from payments.models import PaymentProjectBased
 
 class WorkerDashboardTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
@@ -19,10 +20,17 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                     worker_project = Project.objects.filter(Q(worker=request.user) & Q(status='done'))
                     worker_task = Task.objects.filter(Q(worker=request.user) & Q(status='done'))
                     worker_issues = Issues.objects.filter(Q(project__worker=request.user))
+                    
+                    worker_earning_obj = PaymentProjectBased.objects.filter(Q(receivers=request.user) & Q(is_received=True))
+                    worker_earning = 0
+                    for worker in worker_earning_obj:
+                        worker_earning += worker.amount
+
                     context = {
                         'worker_project': worker_project,
                         'worker_task': worker_task,
-                        'worker_issues': worker_issues
+                        'worker_issues': worker_issues,
+                        'worker_earning': worker_earning
                     }
                     return render(request, 'worker/index.html', context)
                 else:

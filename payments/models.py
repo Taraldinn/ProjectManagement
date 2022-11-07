@@ -13,7 +13,7 @@ class PaymentProjectBased(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"Payment to {self.receiver}"
+        return f"Payment to {self.project}"
     
     class Meta:
         verbose_name_plural = 'Payments Employe'
