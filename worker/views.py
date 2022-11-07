@@ -148,6 +148,35 @@ class ProjectDetailTemplateView(TemplateView):
         else:
             return redirect('accounts:login')
 
+# project detials view
+class AcceptProjectTemplateView(TemplateView):
+    def get(self, request, pk, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.user.profile.is_fully_filled():
+                # redirect to user dashboard
+                if request.user.user_type == 'admin':
+                    return redirect('admin_dashboard:admin_dashboard')
+                elif request.user.user_type == 'leader':
+                    return redirect('leader:leader_dashboard')
+                elif request.user.user_type == 'worker':
+                    project = Project.objects.get(id=pk)
+                    project.status = 'working'
+                    project.save()
+                    payment_obj = PaymentProjectBased.objects.get(project=project)
+                    payment_obj.is_received = True
+                    payment_obj.save()
+                    return redirect('worker:worker_project')
+                else:
+                    return redirect('accounts:login')
+            else:
+                return redirect('accounts:accounts_edit_profile')
+        else:
+            return redirect('accounts:login')
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
 # Task creation and list view
 class TaskListTemplateView(TemplateView):
     def get(self, request, *args, **kwargs):

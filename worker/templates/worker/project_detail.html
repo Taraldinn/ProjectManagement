@@ -43,7 +43,7 @@
                   {% if project.status == 'stuck' %}
                      <div class="card-header pb-0">
                         <div class="form-group mb-0 me-0"></div>
-                        <a href="#accept" class="btn btn-primary"><i data-feather="check"></i>Accept Project</a>
+                        <a href="{% url 'worker:worker_project_accept' pk=project.pk %}" class="btn btn-primary"><i data-feather="check"></i>Accept Project</a>
                      </div>
                   {% elif project.status == 'working' %}
                      <div class="card-header pb-0">
