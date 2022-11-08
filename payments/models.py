@@ -12,6 +12,7 @@ class PaymentProjectBased(models.Model):
     salary = models.FloatField(default=0, blank=True, null=True)
     is_received = models.BooleanField(default=False)
     is_accept = models.BooleanField(default=False)
+    date = models.DateField()
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:

@@ -260,7 +260,7 @@ class ProjectCreateTemplateAPIView(TemplateView):
                     for worker in request.POST.getlist('worker'):
                         instance.worker.add(worker)
 
-                    return redirect(reverse('payments:payment_worker') + "?pay_for=" + str(instance.pk))
+                    return redirect(reverse('payments:payment_project_based') + "?pay_for=" + str(instance.pk))
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
