@@ -20,3 +20,12 @@ class PaymentProjectBased(models.Model):
     class Meta:
         verbose_name_plural = 'Payments Employe'
 
+    def total_entry_amount(self):
+        total_entry = 0
+        for issues in self.project.issues_set.all():
+            total_day_entry = issues.total_data_entry_today
+            total_entry += total_day_entry
+            return total_entry * 2
+
+    def total_project_amount(self):
+        pass

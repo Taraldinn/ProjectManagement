@@ -14,9 +14,11 @@ class PaymentProjectBasedForm(forms.ModelForm):
         model = PaymentProjectBased
         fields = [
             'amount',
+            'per_entry',
             'receivers',
         ]
         widgets = {
             'amount': forms.NumberInput(attrs={'class': 'form-control'}), 
+            'per_entry': forms.NumberInput(attrs={'class': 'form-control'}), 
         }
 
