@@ -8,6 +8,8 @@ from django.db.models import Q
 from django.contrib import messages
 from payments.models import PaymentProjectBased
 
+
+
 class WorkerDashboardTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:

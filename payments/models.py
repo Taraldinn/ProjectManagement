@@ -8,8 +8,10 @@ class PaymentProjectBased(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leader_payments', blank=False, null=False)
     receivers = models.ManyToManyField(User, related_name='worker_payments', blank=False)
     amount = models.FloatField(default=0, blank=False, null=False)
+    per_entry = models.FloatField(default=0, blank=True, null=True)
     salary = models.FloatField(default=0, blank=True, null=True)
     is_received = models.BooleanField(default=False)
+    is_accept = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
