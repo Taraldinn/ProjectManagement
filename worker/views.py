@@ -7,7 +7,7 @@ from projects.models import Categories, Issues, Project, ProjectSubmission, Task
 from django.db.models import Q
 from django.contrib import messages
 from payments.models import PaymentProjectBased
-
+import datetime
 
 
 class WorkerDashboardTemplateAPIView(TemplateView):
@@ -23,16 +23,35 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                     worker_task = Task.objects.filter(Q(worker=request.user) & Q(status='done'))
                     worker_issues = Issues.objects.filter(Q(project__worker=request.user))
                     
+                    # earning filtering here ===============
                     worker_earning_obj = PaymentProjectBased.objects.filter(Q(project__accept_status='accept') & Q(receivers=request.user) & Q(is_received=True))
                     worker_earning = 0
                     for worker in worker_earning_obj:
                         worker_earning += worker.amount
-
+                    
+                    # today earning
+                    today = datetime.date.today()
+                    today_earning_obj = PaymentProjectBased.objects.filter(date=today, project__accept_status='accept', receivers=request.user, is_received=True)
+                    today_earning = 0
+                    for today_earn in today_earning_obj:
+                        today_earning += today_earn.amount
+                    
+                    # this week earning
+                    today = datetime.date.today()
+                    this_week = today.weekday()
+                    # this filtering is not finished yet
+                    this_week_earning_obj = PaymentProjectBased.objects.filter(project__accept_status='accept', receivers=request.user, is_received=True)
+                    week_earning = 0
+                    for week_earn in this_week_earning_obj:
+                        week_earning += week_earn.amount
+                    # earning filtering here ================
                     context = {
                         'worker_project': worker_project,
                         'worker_task': worker_task,
                         'worker_issues': worker_issues,
-                        'worker_earning': worker_earning
+                        'worker_earning': worker_earning,
+                        'today_earning': today_earning,
+                        'week_earning': week_earning
                     }
                     return render(request, 'worker/index.html', context)
                 else:
@@ -54,7 +73,7 @@ class ProjectListTemplateView(TemplateView):
                 elif request.user.user_type == 'leader':
                     return redirect('leader:leader_dashboard')
                 elif request.user.user_type == 'worker':
-                    projects = Project.objects.filter(Q(worker=request.user) & Q(is_active = True)).order_by('-id')
+                    projects = Project.objects.filter(Q(worker = request.user) & Q(is_active = True)).order_by('-id')
                     context = {
                         'projects': projects
                     }
@@ -167,6 +186,7 @@ class AcceptProjectTemplateView(TemplateView):
                     project.save()
                     payment_obj = PaymentProjectBased.objects.get(project=project)
                     payment_obj.is_received = True
+                    payment_obj.is_accept = True
                     payment_obj.save()
                     return redirect('worker:worker_project')
                 else:

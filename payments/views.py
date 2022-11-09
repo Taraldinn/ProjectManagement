@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
+from accounts.models import User
 from payments.forms import PaymentProjectBasedForm, PaymentWorkerForm
 from payments.models import PaymentProjectBased
 from projects.models import Project
@@ -15,6 +16,10 @@ class PaymentProjectBasedTemplateView(TemplateView):
             if request.user.user_type == 'admin':
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
+                # project_id = request.GET.get('pay_for')
+                # project_obj = Project.objects.get(id=project_id)
+                # workers = project_obj.worker.all()
+
                 form = PaymentProjectBasedForm()
                 context = {
                     'form': form

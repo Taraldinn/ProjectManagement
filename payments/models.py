@@ -27,6 +27,7 @@ class PaymentProjectBased(models.Model):
             total_day_entry = issues.total_data_entry_today
             total_entry += total_day_entry
             return total_entry * 2
+        return total_entry * 2
 
     def total_project_amount(self):
         pass
