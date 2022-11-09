@@ -37,13 +37,25 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                         today_earning += today_earn.amount
                     
                     # this week earning
-                    today = datetime.date.today()
-                    this_week = today.weekday()
-                    # this filtering is not finished yet
-                    this_week_earning_obj = PaymentProjectBased.objects.filter(project__accept_status='accept', receivers=request.user, is_received=True)
+                    week_start = datetime.date.today()
+                    week_start -= datetime.timedelta(days=week_start.weekday())
+                    week_end = week_start + datetime.timedelta(days=7)
+                    this_week_earning_obj = PaymentProjectBased.objects.filter(Q(date__gte=week_start, date__lt=week_end) & Q(project__accept_status='accept', receivers=request.user, is_received=True, is_accept=True))
                     week_earning = 0
                     for week_earn in this_week_earning_obj:
                         week_earning += week_earn.amount
+
+                    # this month earning
+                    this_month_earning_obj = PaymentProjectBased.objects.filter(Q(date__gte=datetime.datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)) & Q(project__accept_status='accept', receivers=request.user, is_received=True, is_accept=True))
+                    month_earning = 0
+                    for month_earn in this_month_earning_obj:
+                        month_earning += month_earn.amount
+                    
+                    # this year earning
+                    this_year_earning_obj = PaymentProjectBased.objects.filter(Q(date__year=datetime.datetime.now().year) & Q(project__accept_status='accept', receivers=request.user, is_received=True, is_accept=True))
+                    year_earning = 0
+                    for year_earn in this_year_earning_obj:
+                        year_earning += year_earn.amount
                     # earning filtering here ================
                     context = {
                         'worker_project': worker_project,
@@ -51,7 +63,9 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                         'worker_issues': worker_issues,
                         'worker_earning': worker_earning,
                         'today_earning': today_earning,
-                        'week_earning': week_earning
+                        'week_earning': week_earning,
+                        'month_earning': month_earning,
+                        'year_earning': year_earning
                     }
                     return render(request, 'worker/index.html', context)
                 else:
