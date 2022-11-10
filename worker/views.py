@@ -24,48 +24,17 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                     worker_issues = Issues.objects.filter(Q(project__worker=request.user))
                     
                     # earning filtering here ===============
-                    worker_earning_obj = PaymentProjectBased.objects.filter(Q(project__accept_status='accept') & Q(receivers=request.user) & Q(is_received=True))
-                    worker_earning = 0
-                    for worker in worker_earning_obj:
-                        worker_earning += worker.amount
-                    
-                    # today earning
-                    today = datetime.date.today()
-                    today_earning_obj = PaymentProjectBased.objects.filter(date=today, project__accept_status='accept', receivers=request.user, is_received=True)
-                    today_earning = 0
-                    for today_earn in today_earning_obj:
-                        today_earning += today_earn.amount
-                    
-                    # this week earning
-                    week_start = datetime.date.today()
-                    week_start -= datetime.timedelta(days=week_start.weekday())
-                    week_end = week_start + datetime.timedelta(days=7)
-                    this_week_earning_obj = PaymentProjectBased.objects.filter(Q(date__gte=week_start, date__lt=week_end) & Q(project__accept_status='accept', receivers=request.user, is_received=True, is_accept=True))
-                    week_earning = 0
-                    for week_earn in this_week_earning_obj:
-                        week_earning += week_earn.amount
-
-                    # this month earning
-                    this_month_earning_obj = PaymentProjectBased.objects.filter(Q(date__gte=datetime.datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)) & Q(project__accept_status='accept', receivers=request.user, is_received=True, is_accept=True))
-                    month_earning = 0
-                    for month_earn in this_month_earning_obj:
-                        month_earning += month_earn.amount
-                    
-                    # this year earning
-                    this_year_earning_obj = PaymentProjectBased.objects.filter(Q(date__year=datetime.datetime.now().year) & Q(project__accept_status='accept', receivers=request.user, is_received=True, is_accept=True))
-                    year_earning = 0
-                    for year_earn in this_year_earning_obj:
-                        year_earning += year_earn.amount
+                    get_worker_earnings = PaymentProjectBased.objects.filter(receivers=request.user).first()
                     # earning filtering here ================
                     context = {
                         'worker_project': worker_project,
                         'worker_task': worker_task,
                         'worker_issues': worker_issues,
-                        'worker_earning': worker_earning,
-                        'today_earning': today_earning,
-                        'week_earning': week_earning,
-                        'month_earning': month_earning,
-                        'year_earning': year_earning
+                        'totals_earning': get_worker_earnings.totals_earning(request.user),
+                        'today_earning': get_worker_earnings.today_earning(request.user),
+                        'week_earning': get_worker_earnings.week_earning(request.user),
+                        'month_earning': get_worker_earnings.month_earning(request.user),
+                        'year_earning': get_worker_earnings.year_earning(request.user)
                     }
                     return render(request, 'worker/index.html', context)
                 else:
