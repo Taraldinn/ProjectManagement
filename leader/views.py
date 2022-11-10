@@ -54,7 +54,6 @@ class LeaderDashboardAPIView(TemplateView):
     def post(self, request, *args, **kwargs):
         pass
 
-
 # worker creation and list view
 class WorkerListTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
@@ -225,7 +224,6 @@ class ProjectDetailTemplateAPIView(TemplateView):
         else:
             return redirect('accounts:login')
 
-
 # project creation view
 class ProjectCreateTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
@@ -256,6 +254,7 @@ class ProjectCreateTemplateAPIView(TemplateView):
                     instance.leader = request.user
                     instance.complete_per = 0
                     instance.is_active = True
+                    instance.accept_status = 'pending'
                     instance.save()
                     for worker in request.POST.getlist('worker'):
                         instance.worker.add(worker)
@@ -268,7 +267,6 @@ class ProjectCreateTemplateAPIView(TemplateView):
 
         else:
             return redirect('accounts:login')
-
 
 # Task creation and list view
 class TaskListTemplateAPIView(TemplateView):
@@ -316,7 +314,6 @@ class TaskListTemplateAPIView(TemplateView):
         else:
             return redirect('accounts:login')
 
-
 # Project Submission view
 class ProjectSubmissionTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
@@ -347,7 +344,6 @@ class ProjectSubmissionTemplateAPIView(TemplateView):
 
         else:
             return redirect('accounts:login')
-
 
 # Send Notification view
 class SendNotificationTemplateView(TemplateView):

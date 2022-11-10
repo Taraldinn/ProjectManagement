@@ -19,15 +19,26 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                 return redirect('leader:leader_dashboard')
             elif request.user.user_type == 'worker':
                 if request.user.profile.is_fully_filled():
-                    worker_project = Project.objects.filter(Q(worker=request.user) & Q(status='done'))
+                    # project filtering object
+                    worker_project_obj = Project.objects.filter(worker=request.user).first()
+                    # project filtering object
+
+                    # tasks and issues filtering
                     worker_task = Task.objects.filter(Q(worker=request.user) & Q(status='done'))
                     worker_issues = Issues.objects.filter(Q(project__worker=request.user))
-                    
+                    # tasks and issues filtering
+
+                    # project submited filtering object
+                    project_submited_obj = ProjectSubmission.objects.filter(Q(project__worker=request.user, status='done') & Q(project__status='done', project__accept_status='accept'))
+                    # project submited filtering object
                     # earning filtering here ===============
                     get_worker_earnings = PaymentProjectBased.objects.filter(receivers=request.user).first()
                     # earning filtering here ================
                     context = {
-                        'worker_project': worker_project,
+                        'total_project_accept': worker_project_obj.project_accept(request.user),
+                        'total_project_pending': worker_project_obj.project_pending(request.user),
+                        'total_project_decline': worker_project_obj.project_decline(request.user),
+                        'total_project_submited': project_submited_obj,
                         'worker_task': worker_task,
                         'worker_issues': worker_issues,
                         'totals_earning': get_worker_earnings.totals_earning(request.user),
@@ -36,6 +47,7 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                         'month_earning': get_worker_earnings.month_earning(request.user),
                         'year_earning': get_worker_earnings.year_earning(request.user)
                     }
+                    messages.info(request, "Welcome to your dashboard")
                     return render(request, 'worker/index.html', context)
                 else:
                     return redirect('accounts:accounts_edit_profile')
@@ -167,10 +179,6 @@ class AcceptProjectTemplateView(TemplateView):
                     project.status = 'working'
                     project.accept_status = 'accept'
                     project.save()
-                    payment_obj = PaymentProjectBased.objects.get(project=project)
-                    payment_obj.is_received = True
-                    payment_obj.is_accept = True
-                    payment_obj.save()
                     return redirect('worker:worker_project')
                 else:
                     return redirect('accounts:login')

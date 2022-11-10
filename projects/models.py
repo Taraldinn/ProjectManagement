@@ -2,6 +2,7 @@ from django.db import models
 from django_quill.fields import QuillField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -92,7 +93,8 @@ WANT_CHOICE = (
 ACCEPT_STATUS = (
     ('draft', 'draft'),
     ('decline', 'decline'),
-    ('accept', 'accept')
+    ('accept', 'accept'),
+    ('pending', 'pending'),
             
 )
 
@@ -141,7 +143,19 @@ class Project(models.Model):
 
     def __str__(self):
         return (self.name)
+    
 
+    def project_accept(self, user):
+        worker_project = Project.objects.filter(Q(worker=user) & Q(accept_status='accept'))
+        return worker_project
+    
+    def project_pending(self, user):
+        worker_project = Project.objects.filter(Q(worker=user) & Q(accept_status='pending'))
+        return worker_project
+    
+    def project_decline(self, user):
+        worker_project = Project.objects.filter(Q(worker=user) & Q(accept_status='decline'))
+        return worker_project
 
 
 
@@ -197,10 +211,6 @@ class ProjectSubmission(models.Model):
     def __str__(self):
         return f"task submission of => {self.project.name}"
     
-
-    def total_hours_today(self):
-        pass
-
 
 
 
