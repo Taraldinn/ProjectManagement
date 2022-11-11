@@ -176,7 +176,7 @@ class AcceptProjectTemplateView(TemplateView):
                     return redirect('leader:leader_dashboard')
                 elif request.user.user_type == 'worker':
                     project = Project.objects.get(id=pk)
-                    project.status = 'working'
+                    project.status = 'stuck'
                     project.accept_status = 'accept'
                     project.save()
                     return redirect('worker:worker_project')

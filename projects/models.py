@@ -99,9 +99,10 @@ ACCEPT_STATUS = (
 )
 
 STATUS = (
-            ('stuck', 'Stuck'),
-            ('working', 'Working'),
-            ('done', 'Done'),
+    ('draft', 'draft'),
+    ('stuck', 'Stuck'),
+    ('working', 'Working'),
+    ('done', 'Done'),
 )
 
 DUE = (
@@ -146,11 +147,11 @@ class Project(models.Model):
     
 
     def project_accept(self, user):
-        worker_project = Project.objects.filter(Q(worker=user) & Q(accept_status='accept'))
+        worker_project = Project.objects.filter(Q(worker=user) & Q(status='stuck', accept_status='accept'))
         return worker_project
     
     def project_pending(self, user):
-        worker_project = Project.objects.filter(Q(worker=user) & Q(accept_status='pending'))
+        worker_project = Project.objects.filter(Q(worker=user) & Q(status='working', accept_status='pending'))
         return worker_project
     
     def project_decline(self, user):

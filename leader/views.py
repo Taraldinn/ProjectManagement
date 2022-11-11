@@ -254,7 +254,7 @@ class ProjectCreateTemplateAPIView(TemplateView):
                     instance.leader = request.user
                     instance.complete_per = 0
                     instance.is_active = True
-                    instance.accept_status = 'pending'
+                    instance.accept_status = 'draft'
                     instance.save()
                     for worker in request.POST.getlist('worker'):
                         instance.worker.add(worker)
