@@ -19,7 +19,7 @@ def notification_worker(user):
     if notifications.exists():
         return notifications
     else:
-        return "You don't have any Notification!"
+        return None
 
 
 @register.filter

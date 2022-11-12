@@ -171,6 +171,7 @@ class ProjectDetailTemplateView(TemplateView):
                 # Issues form submission ======================================
                 if issues_form.is_valid():
                     instance = issues_form.save(commit=False)
+                    instance.user = request.user
                     instance.project = project_obj
                     instance.task = None
                     instance.is_active = True

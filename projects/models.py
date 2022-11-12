@@ -183,6 +183,7 @@ class Task(models.Model):
 
 
 class Issues(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="issues")
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="issues")
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, blank=True, null=True, related_name="issues")
     status = models.CharField(max_length=7, choices=STATUS, default=1)
