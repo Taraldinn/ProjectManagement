@@ -6,7 +6,7 @@ from projects.forms import IssuesModelForm, ProjectSubmissionModelForm, TaskMode
 from projects.models import Categories, Issues, Project, ProjectSubmission, Task
 from django.db.models import Q
 from django.contrib import messages
-from payments.models import PaymentProjectBased
+from payments.models import Payments
 import datetime
 
 
@@ -29,26 +29,46 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                     # tasks and issues filtering
 
                     # project submited filtering object
-                    project_submited_obj = ProjectSubmission.objects.filter(Q(project__worker=request.user, status='done') & Q(project__status='done', project__accept_status='accept'))
+                    project_submited_obj = ProjectSubmission.objects.filter(Q(project__worker=request.user, status='done') & Q(project__status='done'))
                     # project submited filtering object
                     # earning filtering here ===============
-                    get_worker_earnings = PaymentProjectBased.objects.filter(receivers=request.user).first()
+                    payment_worker_obj = Payments.objects.filter(receivers=request.user)
                     # earning filtering here ================
-                    context = {
-                        'total_project_accept': worker_project_obj.project_accept(request.user),
-                        'total_project_pending': worker_project_obj.project_pending(request.user),
-                        'total_project_decline': worker_project_obj.project_decline(request.user),
-                        'total_project_submited': project_submited_obj,
-                        'worker_task': worker_task,
-                        'worker_issues': worker_issues,
-                        'totals_earning': get_worker_earnings.totals_earning(request.user),
-                        'today_earning': get_worker_earnings.today_earning(request.user),
-                        'week_earning': get_worker_earnings.week_earning(request.user),
-                        'month_earning': get_worker_earnings.month_earning(request.user),
-                        'year_earning': get_worker_earnings.year_earning(request.user)
-                    }
-                    messages.info(request, "Welcome to your dashboard")
-                    return render(request, 'worker/index.html', context)
+                    if payment_worker_obj.exists():
+                        get_worker_earnings = payment_worker_obj.first()
+                        print('=====================if==========================')
+                        context = {
+                            'total_project_accept': worker_project_obj.project_accept(request.user),
+                            'total_project_pending': worker_project_obj.project_pending(request.user),
+                            'total_project_decline': worker_project_obj.project_decline(request.user),
+                            'total_project_submited': project_submited_obj,
+                            'worker_task': worker_task,
+                            'worker_issues': worker_issues,
+                            'totals_earning': get_worker_earnings.totals_earning(request.user),
+                            'today_earning': get_worker_earnings.today_earning(request.user),
+                            'week_earning': get_worker_earnings.week_earning(request.user),
+                            'month_earning': get_worker_earnings.month_earning(request.user),
+                            'year_earning': get_worker_earnings.year_earning(request.user)
+                        }
+                        messages.info(request, "Welcome to your dashboard")
+                        return render(request, 'worker/index.html', context)
+                    else:
+                        print('======================ELSE=========================')
+                        context = {
+                            'total_project_accept': worker_project_obj.project_accept(request.user),
+                            'total_project_pending': worker_project_obj.project_pending(request.user),
+                            'total_project_decline': worker_project_obj.project_decline(request.user),
+                            'total_project_submited': project_submited_obj,
+                            'worker_task': worker_task,
+                            'worker_issues': worker_issues,
+                            'totals_earning': 0,
+                            'today_earning': 0,
+                            'week_earning': 0,
+                            'month_earning': 0,
+                            'year_earning': 0
+                        }
+                        messages.info(request, "Welcome to your dashboard")
+                        return render(request, 'worker/index.html', context)
                 else:
                     return redirect('accounts:accounts_edit_profile')
         else:

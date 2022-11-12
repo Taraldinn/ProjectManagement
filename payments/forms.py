@@ -1,17 +1,17 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from projects.models import Project
-from payments.models import PaymentProjectBased
+from payments.models import Payments
 User = get_user_model()
 
 # pay project based form
-class PaymentProjectBasedForm(forms.ModelForm):
+class PaymentsProjectForm(forms.ModelForm):
     receivers = forms.ModelMultipleChoiceField(
         queryset=User.objects.filter(user_type='worker'),
         widget=forms.CheckboxSelectMultiple
     )
     class Meta:
-        model = PaymentProjectBased
+        model = Payments
         fields = [
             'amount',
             'per_entry',
@@ -35,7 +35,7 @@ class PaymentWorkerForm(forms.ModelForm):
     )
 
     class Meta:
-        model = PaymentProjectBased
+        model = Payments
         fields = [
             'project',
             'amount',

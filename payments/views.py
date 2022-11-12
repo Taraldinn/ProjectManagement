@@ -2,8 +2,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from accounts.models import User
-from payments.forms import PaymentProjectBasedForm, PaymentWorkerForm
-from payments.models import PaymentProjectBased
+from payments.forms import PaymentsProjectForm, PaymentWorkerForm
+from payments.models import Payments
 from projects.models import Project
 import datetime
 
@@ -20,7 +20,7 @@ class PaymentProjectBasedTemplateView(TemplateView):
                 # project_obj = Project.objects.get(id=project_id)
                 # workers = project_obj.worker.all()
 
-                form = PaymentProjectBasedForm()
+                form = PaymentsProjectForm()
                 context = {
                     'form': form
                 }
@@ -38,7 +38,7 @@ class PaymentProjectBasedTemplateView(TemplateView):
                 # here will execute tasks
                 project_id = request.GET.get('pay_for')
                 project_obj = Project.objects.get(id=project_id)
-                form = PaymentProjectBasedForm(request.POST, request.FILES)
+                form = PaymentsProjectForm(request.POST, request.FILES)
                 if form.is_valid():
                     instance = form.save(commit=False)
                     instance.project = project_obj
@@ -84,7 +84,7 @@ class PaymentWorkerTemplateView(TemplateView):
                 # here will execute tasks
                 project_id = request.GET.get('pay_for')
                 project_obj = Project.objects.get(id=project_id)
-                form = PaymentProjectBasedForm(request.POST, request.FILES)
+                form = PaymentsProjectForm(request.POST, request.FILES)
                 if form.is_valid():
                     instance = form.save(commit=False)
                     instance.project = project_obj

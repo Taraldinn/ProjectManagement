@@ -5,7 +5,7 @@ from django.db.models import Q
 import datetime
 
 # Payment model
-class PaymentProjectBased(models.Model):
+class Payments(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='payments', blank=False, null=False)
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leader_payments', blank=False, null=False)
     receivers = models.ManyToManyField(User, related_name='worker_payments', blank=False)
@@ -36,14 +36,14 @@ class PaymentProjectBased(models.Model):
     def today_earning(self, user):
         # today earning
         today = datetime.date.today()
-        today_earning_obj = PaymentProjectBased.objects.filter(date=today, project__accept_status='accept', project__status='done', receivers=user, is_received=True)
+        today_earning_obj = Payments.objects.filter(Q(date=today) & Q(project__worker=user) & Q(project__status='done', is_received=True))
+        today_earning = 0
         if today_earning_obj.exists():
-            today_earning = 0
             for today_earn in today_earning_obj:
                 today_earning += today_earn.amount
             return today_earning
         else:
-            return 0
+            return today_earning
 
     # this week earning
     def week_earning(self, user):
@@ -51,7 +51,7 @@ class PaymentProjectBased(models.Model):
         week_start = datetime.date.today()
         week_start -= datetime.timedelta(days=week_start.weekday())
         week_end = week_start + datetime.timedelta(days=7)
-        this_week_earning_obj = PaymentProjectBased.objects.filter(Q(date__gte=week_start, date__lt=week_end) & Q(project__accept_status='accept', project__status='done', receivers=user, is_received=True, is_accept=True))
+        this_week_earning_obj = Payments.objects.filter(Q(date__gte=week_start, date__lt=week_end) & Q(project__worker=user) & Q(project__status='done', is_received=True, is_accept=True))
         if this_week_earning_obj.exists():
             week_earning = 0
             for week_earn in this_week_earning_obj:
@@ -63,7 +63,7 @@ class PaymentProjectBased(models.Model):
     # this month earning
     def month_earning(self, user):
         # this month earning
-        this_month_earning_obj = PaymentProjectBased.objects.filter(Q(date__gte=datetime.datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)) & Q(project__accept_status='accept', project__status='done', receivers=user, is_received=True, is_accept=True))
+        this_month_earning_obj = Payments.objects.filter(Q(date__gte=datetime.datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)) & Q(project__worker=user) & Q(project__status='done', is_received=True, is_accept=True))
         if this_month_earning_obj.exists():
             month_earning = 0
             for month_earn in this_month_earning_obj:
@@ -75,7 +75,7 @@ class PaymentProjectBased(models.Model):
     # this year earning
     def year_earning(self, user):
         # this year earning
-        this_year_earning_obj = PaymentProjectBased.objects.filter(Q(date__year=datetime.datetime.now().year) & Q(project__accept_status='accept', project__status='done', receivers=user, is_received=True, is_accept=True))
+        this_year_earning_obj = Payments.objects.filter(Q(date__year=datetime.datetime.now().year) & Q(project__worker=user) & Q(project__status='done', is_received=True, is_accept=True))
         if this_year_earning_obj.exists():
             year_earning = 0
             for year_earn in this_year_earning_obj:
@@ -86,7 +86,7 @@ class PaymentProjectBased(models.Model):
     
     # current user totals earnings
     def totals_earning(self, user):
-        totals_earning_obj = PaymentProjectBased.objects.filter(Q(project__accept_status='accept', project__status='done') & Q(receivers=user) & Q(is_received=True, is_accept=True))
+        totals_earning_obj = Payments.objects.filter(Q(project__status='done') & Q(project__worker=user) & Q(is_received=True, is_accept=True))
         if totals_earning_obj.exists():
             totals_earning = 0
             for worker in totals_earning_obj:
