@@ -204,6 +204,7 @@ class Issues(models.Model):
 
 
 class ProjectSubmission(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name= 'project_submissions')
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name= 'project_submissions')
     status = models.CharField(max_length=7, choices=STATUS, default=1)
     description = QuillField()

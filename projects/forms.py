@@ -75,10 +75,7 @@ class TaskModelForm(forms.ModelForm):
 class ProjectSubmissionModelForm(forms.ModelForm):
     class Meta:
         model = ProjectSubmission
-        fields = ['project','status', 'description', 'file']
-        widgets = {
-            'status': forms.Select(attrs={'class': 'form-select'})
-        }
+        fields = ['project', 'description', 'file']
 
 
 class IssuesModelForm(forms.ModelForm):

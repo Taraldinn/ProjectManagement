@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 
 from django.views.generic import TemplateView
 from projects.forms import IssuesModelForm, ProjectSubmissionModelForm, TaskModelForm
-from projects.models import Categories, Issues, Project, ProjectSubmission, Task
+from projects.models import Issues, Project, ProjectSubmission, Task
 from django.db.models import Q
 from django.contrib import messages
 from payments.models import Payments
@@ -142,7 +142,6 @@ class ProjectDetailTemplateView(TemplateView):
                 project_obj = Project.objects.get(id=project_id)
                 postData = {
                     'project': project_obj,
-                    'status': request.POST.get('status'),
                     'description': request.POST.get('description'),
                     'file': request.POST.get('file')
                 }
@@ -156,7 +155,10 @@ class ProjectDetailTemplateView(TemplateView):
                         messages.info(request, "This Project Has Been Submited..!")
                         return redirect('worker:worker_project')
                     else:
-                        form.save()
+                        instance = form.save(commit=False)
+                        instance.user = request.user
+                        instance.status = 'done'
+                        instance.save()
                         ## here will update all {project, task} status to DONE becouse project is submited
                         project_obj.status = 'done'
                         project_obj.complete_per = 100
@@ -166,7 +168,7 @@ class ProjectDetailTemplateView(TemplateView):
                             task.save()
                         project_obj.save()
                         ## end updated all info
-                        return redirect('worker:worker_project')
+                        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
                 # Issues form submission ======================================
                 if issues_form.is_valid():
@@ -176,7 +178,7 @@ class ProjectDetailTemplateView(TemplateView):
                     instance.task = None
                     instance.is_active = True
                     instance.save()
-                    return redirect('worker:worker_project')
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
@@ -248,7 +250,7 @@ class TaskListTemplateView(TemplateView):
                     instance = form.save()
                     for worker in request.POST.getlist('worker'):
                         instance.worker.add(worker)
-                    return redirect('leader:leader_task')
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
@@ -258,7 +260,7 @@ class TaskListTemplateView(TemplateView):
             return redirect('accounts:login')
 
 # Project Submission view
-class ProjectSubmissionTemplateView(TemplateView):
+class SubmitedProjectsTemplateView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.user.profile.is_fully_filled():

@@ -148,9 +148,6 @@ class ProjectDetailTemplateAPIView(TemplateView):
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
                 project = Project.objects.get(id=pk)
-                print('============================================')
-                print(project.issues)
-                print('============================================')
                 tasks = Task.objects.filter(project=project).order_by('-id')
 
                 form = ProjectSubmissionModelForm()
@@ -178,7 +175,6 @@ class ProjectDetailTemplateAPIView(TemplateView):
                 project_obj = Project.objects.get(id=project_id)
                 postData = {
                     'project': project_obj,
-                    'status': request.POST.get('status'),
                     'description': request.POST.get('description'),
                     'file': request.POST.get('file')
                 }
@@ -192,7 +188,9 @@ class ProjectDetailTemplateAPIView(TemplateView):
                         messages.info(request, "This Project Has Been Submited..!")
                         return redirect('leader:leader_project')
                     else:
-                        form.save()
+                        instance = form.save(commit=False)
+                        instance.user = request.user
+                        instance.status = 'done'
                         ## here will update all {project, task} status to DONE becouse project is submited
                         project_obj.status = 'done'
                         project_obj.complete_per = 100
@@ -202,7 +200,7 @@ class ProjectDetailTemplateAPIView(TemplateView):
                             task.save()
                         project_obj.save()
                         ## end updated all info
-                        return redirect('leader:leader_project')
+                        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
                 # Issues form submission ======================================
                 if issues_form.is_valid():
@@ -315,14 +313,14 @@ class TaskListTemplateAPIView(TemplateView):
             return redirect('accounts:login')
 
 # Project Submission view
-class ProjectSubmissionTemplateAPIView(TemplateView):
+class SubmitedProjectsTemplateAPIView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             # redirect to user dashboard
             if request.user.user_type == 'admin':
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
-                submited_projects = ProjectSubmission.objects.filter(project__leader=request.user).order_by('-id')
+                submited_projects = ProjectSubmission.objects.filter(project__leader=request.user, project__status='done').order_by('-id')
                 context = {
                     'submited_projects': submited_projects
                 }
