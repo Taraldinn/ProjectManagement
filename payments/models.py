@@ -23,14 +23,18 @@ class Payments(models.Model):
     class Meta:
         verbose_name_plural = 'Payments Employee'
 
-    def total_entry_amount(self):
+    def total_entry_amount(self, user):
+        total_per_entry = 0
         total_entry = 0
-        for issues in self.project.issues_set.all():
-            total_day_entry = issues.total_data_entry_today
-            total_entry += total_day_entry
-            return total_entry * 2
-        return total_entry * 2
-
+        payment_obj = Payments.objects.filter(Q(receivers=user) & Q(project__worker=user) & Q(project__status='done', is_received=True))
+        for project in payment_obj:
+            total_per_entry += project.per_entry
+            for issues in project.project.issues.all():
+                if issues.total_data_entry_today == 0:
+                    pass
+                else:
+                    total_entry += int(issues.total_data_entry_today)
+        return total_entry
     
     # today earning
     def today_earning(self, user):

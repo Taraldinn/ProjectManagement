@@ -36,6 +36,9 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                     # earning filtering here ================
                     if payment_worker_obj.exists():
                         get_worker_earnings = payment_worker_obj.first()
+                        print('=================================')
+                        print(get_worker_earnings.total_entry_amount(request.user))
+                        print('=================================')
                         context = {
                             'total_project_accept': worker_project_obj.project_accept(request.user),
                             'total_project_pending': worker_project_obj.project_pending(request.user),

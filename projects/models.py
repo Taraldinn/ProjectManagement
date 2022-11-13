@@ -145,6 +145,9 @@ class Project(models.Model):
     def __str__(self):
         return (self.name)
     
+    @property
+    def issues(self):
+        return issues_set.all().order_by('-id')
 
     def project_accept(self, user):
         worker_project = Project.objects.filter(Q(worker=user) & Q(status='stuck', accept_status='accept'))
