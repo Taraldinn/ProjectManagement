@@ -6,6 +6,7 @@ from payments.forms import PaymentsProjectForm, PaymentWorkerForm
 from payments.models import Payments
 from projects.models import Project
 import datetime
+from django.contrib import messages
 
 
 # payment worker creation view
@@ -66,7 +67,7 @@ class PaymentWorkerTemplateView(TemplateView):
             if request.user.user_type == 'admin':
                 return redirect('admin_dashboard:admin_dashboard')
             elif request.user.user_type == 'leader':
-                form = PaymentWorkerForm(request.user)
+                form = PaymentWorkerForm()
                 context = {
                     'form': form
                 }
@@ -82,19 +83,20 @@ class PaymentWorkerTemplateView(TemplateView):
         if request.user.is_authenticated:
             if request.method == 'post' or request.method == 'POST':
                 # here will execute tasks
-                project_id = request.GET.get('pay_for')
-                project_obj = Project.objects.get(id=project_id)
-                form = PaymentsProjectForm(request.POST, request.FILES)
+                form = PaymentWorkerForm(request.POST, request.FILES)
                 if form.is_valid():
                     instance = form.save(commit=False)
-                    instance.project = project_obj
                     instance.sender = request.user
+                    instance.is_received = True
+                    instance.is_accept = True
                     instance.date = datetime.date.today()
                     instance.save()
                     for worker in request.POST.getlist('receivers'):
                         instance.receivers.add(worker)
-                    return redirect('leader:leader_project')
+                    messages.success(request, "Payment submited successfully..!")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                 else:
+                    messages.warning(request, "Failed payment request try again..!")
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon

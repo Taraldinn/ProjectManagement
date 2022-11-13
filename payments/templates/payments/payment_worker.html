@@ -49,14 +49,14 @@
                   <div class="row">
                     <div class="col-6">
                       <div class="mb-3">
-                        <label>Pay For Full Project</label>
+                        <label>Pay for full project</label>
                         {{form.amount}}
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="mb-3">
-                        <label>Pay Per Entry</label>
-                        {{form.amount}}
+                        <label>Pay per entry</label>
+                        {{form.per_entry}}
                       </div>
                     </div>
                   </div>
@@ -72,7 +72,7 @@
 
                   <div class="row">
                     <div class="col">
-                      <div class="text-end"><button type='submit' class="btn btn-secondary me-3">Add Project</button><a class="btn btn-danger" href="{% url 'leader:leader_project' %}">Cancel</a></div>
+                      <div class="text-end"><button type='submit' class="btn btn-secondary me-3">Submit Payments</button><a class="btn btn-danger" href="{% url 'leader:leader_project' %}">Cancel</a></div>
                     </div>
                   </div>
                 </div>

@@ -25,10 +25,6 @@ class PaymentsProjectForm(forms.ModelForm):
 
 # pay to direct worker form
 class PaymentWorkerForm(forms.ModelForm):
-    project = forms.ModelMultipleChoiceField(
-        queryset= Project.objects.filter(leader=1),
-        widget=forms.Select
-    )
     receivers = forms.ModelMultipleChoiceField(
         queryset=User.objects.filter(user_type='worker'),
         widget=forms.CheckboxSelectMultiple
@@ -47,8 +43,3 @@ class PaymentWorkerForm(forms.ModelForm):
             'amount': forms.NumberInput(attrs={'class': 'form-control'}), 
             'per_entry': forms.NumberInput(attrs={'class': 'form-control'}), 
         }
-    
-    def __init__(self, user, *args, **kwargs):
-        super(PaymentWorkerForm, self).__init__(*args, **kwargs)
-        self.fields['project'].queryset = Project.objects.filter(leader = user)
-

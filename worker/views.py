@@ -36,7 +36,6 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                     # earning filtering here ================
                     if payment_worker_obj.exists():
                         get_worker_earnings = payment_worker_obj.first()
-                        print('=====================if==========================')
                         context = {
                             'total_project_accept': worker_project_obj.project_accept(request.user),
                             'total_project_pending': worker_project_obj.project_pending(request.user),
@@ -50,10 +49,9 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                             'month_earning': get_worker_earnings.month_earning(request.user),
                             'year_earning': get_worker_earnings.year_earning(request.user)
                         }
-                        messages.info(request, "Welcome to your dashboard")
+                        messages.info(request, f"Hello '{request.user}' Welcome back to your dashboard..!")
                         return render(request, 'worker/index.html', context)
                     else:
-                        print('======================ELSE=========================')
                         context = {
                             'total_project_accept': worker_project_obj.project_accept(request.user),
                             'total_project_pending': worker_project_obj.project_pending(request.user),
@@ -67,7 +65,7 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                             'month_earning': 0,
                             'year_earning': 0
                         }
-                        messages.info(request, "Welcome to your dashboard")
+                        messages.info(request, f"Hello '{request.user}' Welcome back to your dashboard..!")
                         return render(request, 'worker/index.html', context)
                 else:
                     return redirect('accounts:accounts_edit_profile')
@@ -168,6 +166,7 @@ class ProjectDetailTemplateView(TemplateView):
                             task.save()
                         project_obj.save()
                         ## end updated all info
+                        messages.info(request, "'Congratulations!' Project Successfully Submited..!")
                         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
                 # Issues form submission ======================================
@@ -178,6 +177,7 @@ class ProjectDetailTemplateView(TemplateView):
                     instance.task = None
                     instance.is_active = True
                     instance.save()
+                    messages.info(request, "Issues Successfully..!")
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -187,7 +187,7 @@ class ProjectDetailTemplateView(TemplateView):
         else:
             return redirect('accounts:login')
 
-# project detials view
+# project accept view
 class AcceptProjectTemplateView(TemplateView):
     def get(self, request, pk, *args, **kwargs):
         if request.user.is_authenticated:
@@ -202,6 +202,7 @@ class AcceptProjectTemplateView(TemplateView):
                     project.status = 'stuck'
                     project.accept_status = 'accept'
                     project.save()
+                    messages.info(request, "'Congratulations!' You have accept new project..!")
                     return redirect('worker:worker_project')
                 else:
                     return redirect('accounts:login')
@@ -213,7 +214,7 @@ class AcceptProjectTemplateView(TemplateView):
     def post(self, request, *args, **kwargs):
         pass
 
-# Task creation and list view
+# Task list and create view
 class TaskListTemplateView(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -227,11 +228,9 @@ class TaskListTemplateView(TemplateView):
                     tasks = Task.objects.filter(Q(project__worker=request.user) & Q(is_active=True)).order_by('-id')
                     task_issues = Issues.objects.filter(Q(project__worker=request.user) & Q(is_active=True)).order_by('-id')
                     
-                    task_form = TaskModelForm()
                     context = {
                         'tasks': tasks,
-                        'task_issues': task_issues,
-                        'task_form': task_form
+                        'task_issues': task_issues
                     }
                     return render(request, 'worker/tasks.html', context)
                 else:
@@ -245,14 +244,7 @@ class TaskListTemplateView(TemplateView):
         if request.user.is_authenticated:
             if request.method == 'post' or request.method == 'POST':
                 # here will execude tasks
-                form = TaskModelForm(request.POST, request.FILES)
-                if form.is_valid():
-                    instance = form.save()
-                    for worker in request.POST.getlist('worker'):
-                        instance.worker.add(worker)
-                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-                else:
-                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                pass
             else:
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
 
