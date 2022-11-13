@@ -58,7 +58,8 @@ class NotificationForm(forms.ModelForm):
         ]
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Enter subject'}),
-            'is_active': forms.CheckboxInput(attrs={'class': 'checkbox_animated', 'type': 'checkbox'})
+            'is_active': forms.CheckboxInput(attrs={'class': 'checkbox_animated', 'type': 'checkbox'}),
+            'message': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Enter messages'}),
         }
 
 

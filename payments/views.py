@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
-from accounts.models import User
+from accounts.models import User, Notification
 from payments.forms import PaymentsProjectForm, PaymentWorkerForm
 from payments.models import Payments
 from projects.models import Project
@@ -48,6 +48,11 @@ class PaymentProjectBasedTemplateView(TemplateView):
                     instance.save()
                     for worker in request.POST.getlist('receivers'):
                         instance.receivers.add(worker)
+                    messages.success(request, "Payment has been sended!")
+                    notification_obj = Notification.objects.create(from_leader=request.user, subject="Payments Info", is_active=True, message="Congratulation! you have a new payments let confirm it.")
+                    for to_worker in request.POST.getlist('receivers'):
+                        notification_obj.to_worker.add(to_worker)
+                        notification_obj.save()
                     return redirect('leader:leader_project')
                 else:
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -94,6 +99,10 @@ class PaymentWorkerTemplateView(TemplateView):
                     for worker in request.POST.getlist('receivers'):
                         instance.receivers.add(worker)
                     messages.success(request, "Payment submited successfully..!")
+                    notification_obj = Notification.objects.create(from_leader=request.user, subject="Payments Info", is_active=True, message="Congratulation! you have a new payments let confirm it.")
+                    for to_worker in request.POST.getlist('receivers'):
+                        notification_obj.to_worker.add(to_worker)
+                        notification_obj.save()
                     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                 else:
                     messages.warning(request, "Failed payment request try again..!")

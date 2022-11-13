@@ -91,7 +91,7 @@
                     {% endif %}
                     <div class="media-body">
                       <h5> <a class="f-14 m-0" href="{% url 'accounts:accounts_seen_notification' pk=notification.pk %}">{{notification.subject}}</a></h5>
-                      {{notification.message.html|safe|truncatechars:30}}
+                      {{notification.message|truncatechars:30}}
                     </div>
                     <div class="notification-right"><a href="{% url 'accounts:accounts_seen_notification' pk=notification.pk %}"><i data-feather="x"></i></a></div>
                   </div>
@@ -119,7 +119,7 @@
                       {% if notification.pk %}
                         <h5> <a class="f-14 m-0" href="{% url 'accounts:accounts_seen_notification' pk=notification.pk %}">{{notification.subject}}</a></h5>
                       {% endif %}
-                      {{notification.message.html|safe|truncatechars:30}}
+                      {{notification.message|truncatechars:50}}
                     </div>
                     {% if notification.pk %}
                       <div class="notification-right"><a href="{% url 'accounts:accounts_seen_notification' pk=notification.pk %}"><i data-feather="x"></i></a></div>

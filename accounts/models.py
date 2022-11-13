@@ -156,7 +156,7 @@ class Notification(models.Model):
     to_worker = models.ManyToManyField(User, blank=True, related_name='to_worker')
     is_active = models.BooleanField(default=False)
     is_seen = models.BooleanField(default=False)
-    message = QuillField()
+    message = models.TextField(max_length=500, blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
