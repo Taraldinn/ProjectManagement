@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}Projects Submited By: {{request.user.profile.full_name}}{% endblock title %}
 {% load project_data_entry %}
 
 {% block body %}
