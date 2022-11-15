@@ -293,7 +293,6 @@ class SubmitedProjectsTemplateView(TemplateView):
         else:
             return redirect('accounts:login')
 
-
 # My Payments view
 class MyPaymentsTemplateView(TemplateView):
     def get(self, request, *args, **kwargs):
