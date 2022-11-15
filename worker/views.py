@@ -36,9 +36,6 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                     # earning filtering here ================
                     if payment_worker_obj.exists():
                         get_worker_earnings = payment_worker_obj.first()
-                        print('=================================')
-                        print(get_worker_earnings.total_entry_amount(request.user))
-                        print('=================================')
                         context = {
                             'total_project_accept': worker_project_obj.project_accept(request.user),
                             'total_project_pending': worker_project_obj.project_pending(request.user),
@@ -56,10 +53,10 @@ class WorkerDashboardTemplateAPIView(TemplateView):
                         return render(request, 'worker/index.html', context)
                     else:
                         context = {
-                            'total_project_accept': worker_project_obj.project_accept(request.user),
-                            'total_project_pending': worker_project_obj.project_pending(request.user),
-                            'total_project_decline': worker_project_obj.project_decline(request.user),
-                            'total_project_submited': project_submited_obj,
+                            'total_project_accept': 0,
+                            'total_project_pending': 0,
+                            'total_project_decline': 0,
+                            'total_project_submited': 0,
                             'worker_task': worker_task,
                             'worker_issues': worker_issues,
                             'totals_earning': 0,
@@ -169,6 +166,14 @@ class ProjectDetailTemplateView(TemplateView):
                             task.save()
                         project_obj.save()
                         ## end updated all info
+                        # update payments info
+                        if Payments.objects.filter(receivers=request.user, project=project_obj).exists():
+                            payment_obj = Payments.objects.filter(receivers=request.user, project=project_obj).first()
+                            payment_obj.is_received = True
+                            payment_obj.is_accept = True
+                            payment_obj.save()
+                        # update payments info
+
                         messages.info(request, "'Congratulations!' Project Successfully Submited..!")
                         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -270,6 +275,41 @@ class SubmitedProjectsTemplateView(TemplateView):
                         'submited_projects': submited_projects
                     }
                     return render(request, 'worker/project_submission.html', context)
+                else:
+                    return redirect('accounts:login')
+            else:
+                return redirect('accounts:accounts_edit_profile')
+        else:
+            return redirect('accounts:login')
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.method == 'post' or request.method == 'POST':
+                # here will execude tasks
+                pass
+            else:
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # return the same page if run this (else) conditon
+
+        else:
+            return redirect('accounts:login')
+
+
+# My Payments view
+class MyPaymentsTemplateView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.user.profile.is_fully_filled():
+                # redirect to user dashboard
+                if request.user.user_type == 'admin':
+                    return redirect('admin_dashboard:admin_dashboard')
+                elif request.user.user_type == 'leader':
+                    return redirect('leader:leader_dashboard')
+                elif request.user.user_type == 'worker':
+                    my_payments = Payments.objects.filter(Q(receivers=request.user) & Q(project__worker=request.user) & Q(project__status='done', is_received=True)).order_by('-id')
+                    context = {
+                        'my_payments': my_payments
+                    }
+                    return render(request, 'worker/my_payments.html', context)
                 else:
                     return redirect('accounts:login')
             else:

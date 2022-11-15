@@ -11,4 +11,5 @@ urlpatterns = [
     path('dashboard/task/', views.TaskListTemplateView.as_view(), name='worker_task'),
     path('dashboard/project/submited/list/', views.SubmitedProjectsTemplateView.as_view(), name='worker_project_submited'),
     path('dashboard/project/payment/accept/<str:pk>/', views.AcceptProjectTemplateView.as_view(), name='worker_project_accept'),
+    path('dashboard/payments/info/', views.MyPaymentsTemplateView.as_view(), name='worker_my_payment'),
 ]

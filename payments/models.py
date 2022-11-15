@@ -23,6 +23,12 @@ class Payments(models.Model):
     class Meta:
         verbose_name_plural = 'Payments Employee'
 
+    def entry_totals(self):
+        totals = 0
+        for entry in self.project.issues.all():
+            totals += int(entry.total_data_entry_today)
+        return totals*self.per_entry
+
     def total_entry_amount(self, user):
         total_per_entry = 0
         total_entry = 0
@@ -30,11 +36,12 @@ class Payments(models.Model):
         for project in payment_obj:
             total_per_entry += project.per_entry
             for issues in project.project.issues.all():
-                if issues.total_data_entry_today == 0:
+                if int(issues.total_data_entry_today) == 0:
                     pass
                 else:
                     total_entry += int(issues.total_data_entry_today)
-        return total_entry
+            
+        return total_entry*total_per_entry
     
     # today earning
     def today_earning(self, user):
@@ -45,7 +52,7 @@ class Payments(models.Model):
         if today_earning_obj.exists():
             for today_earn in today_earning_obj:
                 today_earning += today_earn.amount
-            return today_earning
+            return today_earning + self.total_entry_amount(user)
         else:
             return today_earning
 
@@ -60,7 +67,7 @@ class Payments(models.Model):
             week_earning = 0
             for week_earn in this_week_earning_obj:
                 week_earning += week_earn.amount
-            return week_earning
+            return week_earning + self.total_entry_amount(user)
         else:
             return 0
 
@@ -72,7 +79,7 @@ class Payments(models.Model):
             month_earning = 0
             for month_earn in this_month_earning_obj:
                 month_earning += month_earn.amount
-            return month_earning
+            return month_earning + self.total_entry_amount(user)
         else:
             return 0
 
@@ -84,7 +91,7 @@ class Payments(models.Model):
             year_earning = 0
             for year_earn in this_year_earning_obj:
                 year_earning += year_earn.amount
-            return year_earning
+            return year_earning + self.total_entry_amount(user)
         else:
             return 0
     
@@ -95,6 +102,6 @@ class Payments(models.Model):
             totals_earning = 0
             for worker in totals_earning_obj:
                 totals_earning += worker.amount
-            return totals_earning
+            return totals_earning + self.total_entry_amount(user)
         else:
             return 0
